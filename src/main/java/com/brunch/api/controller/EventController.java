@@ -1,6 +1,9 @@
 package com.brunch.api.controller;
 
 import com.brunch.api.entity.Event;
+import com.brunch.api.entity.EventImage;
+import com.brunch.api.repository.EventImageRepository;
+import com.brunch.api.service.classes.EventImageService;
 import com.brunch.api.service.classes.EventServiceImplement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,10 @@ import java.util.Map;
 public class EventController {
     @Autowired
     private EventServiceImplement eventServiceImplement;
+    @Autowired
+    private EventImageService eventImageService;
+    @Autowired
+    private EventImageRepository eventImageRepository;
 
 //    @Autowired
 //    private EventImageService eventImageService;
@@ -39,9 +46,14 @@ public class EventController {
     public Event getEventById(@PathVariable Long id_event){
         return eventServiceImplement.getEventById(id_event);
     }
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ResponseEntity<Event> createEvent(@Valid @ModelAttribute Event event, @RequestPart(value = "image") MultipartFile file) throws IOException {
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
         Event createEvent = eventServiceImplement.createEvent(event);
+        EventImage eventImage = eventImageService.saveImage(createEvent, file);
 //        String uploadImage = eventImageService.uploadImageToFileSystem(file, createEvent);
         return ResponseEntity.status(HttpStatus.CREATED).body(createEvent);
     }
@@ -49,21 +61,21 @@ public class EventController {
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Event> updateEvent(@RequestParam(name = "id_event") Long id_event, @ModelAttribute Event event, @RequestPart(value = "image", required = false) MultipartFile file, @RequestParam(value="image_change") String image_change) throws IOException {
         Event updateEvent = eventServiceImplement.updateEvent(id_event, event);
-//        List<EventImage> eventImages = new ArrayList<>();
-//        for(EventImage img: eventImageService.findAll()){
-//            if(img.getEvent__().getId_event() == id_event){
-//                eventImages.add(img);
-//            }
-//        }
-//        if(image_change.equals('1')){
-//            for(EventImage eventImage : eventImages){
-//                if(eventImage.isActive()){
-//                    eventImage.setActive(false);
-//                    eventImageRepository.save(eventImage);
-//                }
-//            }
-//            String uploadImage = eventImageService.uploadImageToFileSystem(file, updateEvent);
-//        }
+        List<EventImage> eventImages = new ArrayList<>();
+        for(EventImage img: eventImageService.findAll()){
+            if(img.getEvent__().getId_event() == id_event){
+                eventImages.add(img);
+            }
+        }
+        if(image_change.equals('1')){
+            for(EventImage eventImage : eventImages){
+                if(eventImage.isActive()){
+                    eventImage.setActive(false);
+                    eventImageRepository.save(eventImage);
+                }
+            }
+//            String uploadImage = eventImageService.saveImage(updateEvent, file);
+        }
         return  ResponseEntity.ok(updateEvent);
     }
 
@@ -84,6 +96,38 @@ public class EventController {
 //        byte[] imageData = eventImageService.downloadImageFromFileSystem(fileName);
 //        EventImage eventImage = eventImageService.findByName(fileName);
 //        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf(eventImage.getType())).body(imageData);
+//    }
+
+//    @GetMapping("/{name}/image")
+//    public ResponseEntity<Resource> getImage(@PathVariable String name) {
+//        // Retrieve the product from the database
+//        Optional<EventImage> eventImage = productRepository.findById(productId);
+//        if (optionalProduct.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        Product product = optionalProduct.get();
+//
+//        // Create a Resource object to represent the image file
+//        Resource imageResource = new FileSystemResource(product.getImagePath());
+//
+//        // Check if the file exists
+//        if (!imageResource.exists()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        // Set the appropriate content type for the image
+//        String contentType;
+//        try {
+//            contentType = Files.probeContentType(Paths.get(product.getImagePath()));
+//        } catch (IOException e) {
+//            contentType = "application/octet-stream";
+//        }
+//
+//        // Return the image file as a response
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.parseMediaType(contentType))
+//                .body(imageResource);
 //    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
