@@ -36,18 +36,18 @@ public class Departement extends BaseEntity {
     private Pays pays;
     @JsonManagedReference("departementVille")
     @OneToMany(mappedBy = "departement", cascade = CascadeType.REMOVE)
-    private List<Ville> villes;
+//    private List<Ville> villes;
     public Long getId_departement() {
         return id_departement;
     }
 
-    public List<Ville> getVilles() {
-        return villes;
-    }
+//    public List<Ville> getVilles() {
+//        return villes;
+//    }
 
-    public void setVilles(List<Ville> villes) {
-        this.villes = villes;
-    }
+//    public void setVilles(List<Ville> villes) {
+//        this.villes = villes;
+//    }
 
     public void setId_departement(Long id_departement) {
         this.id_departement = id_departement;
