@@ -33,9 +33,9 @@ public class Pays extends BaseEntity {
     @Column(nullable = false, unique = true, name = "libelle")
     @UniqueLibelle(message = "Libelle existe")
     private String libelle;
-//    @JsonManagedReference("paysDepartement")
-//    @OneToMany(mappedBy = "pays", cascade = CascadeType.REMOVE)
-//    private List<Departement> departements;
+    @JsonManagedReference("paysDepartement")
+    @OneToMany(mappedBy = "pays", cascade = CascadeType.REMOVE)
+    private List<Departement> departements;
 
 
 
