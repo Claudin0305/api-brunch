@@ -22,8 +22,11 @@ public class EventImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Builder.Default
     private Long id=0L;
+    @Builder.Default
     private String name="";
+    @Builder.Default
     private String type="";
+    @Builder.Default
     private String filePath="";
 
     public Long getId() {
