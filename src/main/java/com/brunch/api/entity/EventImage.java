@@ -3,10 +3,7 @@ package com.brunch.api.entity;
 import com.brunch.api.utils.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -16,6 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = false)
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class EventImage extends BaseEntity {
     @Id
@@ -28,6 +26,8 @@ public class EventImage extends BaseEntity {
     private String type="";
     @Builder.Default
     private String filePath="";
+    @Builder.Default
+    private boolean active = true;
 
     public Long getId() {
         return id;
@@ -77,7 +77,6 @@ public class EventImage extends BaseEntity {
         this.event__ = event__;
     }
 
-    private boolean active = true;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @NotNull
