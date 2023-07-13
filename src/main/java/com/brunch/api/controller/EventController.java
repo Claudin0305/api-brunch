@@ -42,16 +42,16 @@ private EventImageRepository eventImageRepository;
     public Event getEventById(@PathVariable Long id_event){
         return eventServiceImplement.getEventById(id_event);
     }
-    @PostMapping
-//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Event> createEvent(@Valid @ModelAttribute Event event, @RequestPart(value = "image") MultipartFile file) throws IOException {
         Event createEvent = eventServiceImplement.createEvent(event);
         String uploadImage = eventImageService.uploadImageToFileSystem(file, createEvent);
         return ResponseEntity.status(HttpStatus.CREATED).body(createEvent);
     }
 
-    @PutMapping
-//    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @PutMapping
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Event> updateEvent(@RequestParam(name = "id_event") Long id_event, @ModelAttribute Event event, @RequestPart(value = "image", required = false) MultipartFile file, @RequestParam(value="image_change") String image_change) throws IOException {
         Event updateEvent = eventServiceImplement.updateEvent(id_event, event);
         List<EventImage> eventImages = new ArrayList<>();

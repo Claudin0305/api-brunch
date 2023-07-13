@@ -20,10 +20,11 @@ import org.hibernate.annotations.OnDeleteAction;
 public class EventImage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String type;
-    private String filePath;
+    @Builder.Default
+    private Long id=0L;
+    private String name="";
+    private String type="";
+    private String filePath="";
 
     public Long getId() {
         return id;
