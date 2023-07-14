@@ -26,7 +26,7 @@ public class EventImageService {
 
     @Autowired
     public EventImageService(Environment env) {
-        this.fileStorageLocation = Paths.get(env.getProperty("app.file.upload-dir", "./uploads/files"))
+        this.fileStorageLocation = Paths.get(env.getProperty("app.file.upload-dir", "/home/isteah/Code/brunch/uploads/files"))
                 .toAbsolutePath().normalize();
 
         try {
