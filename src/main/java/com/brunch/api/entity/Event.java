@@ -87,12 +87,20 @@ public class Event extends BaseEntity {
 //    @OneToMany(mappedBy = "event_local", cascade = CascadeType.REMOVE)
 //    private List<LocalBrunch> localBrunches;
 
-//    @JsonManagedReference("eventResponsableTable")
+    public List<ImageData> getImageDatas() {
+        return imageDatas;
+    }
+
+    public void setImageDatas(List<ImageData> imageDatas) {
+        this.imageDatas = imageDatas;
+    }
+
+    //    @JsonManagedReference("eventResponsableTable")
 //    @OneToMany(mappedBy = "event_", cascade = CascadeType.REMOVE)
 //    private List<ResponsableTable> responsableTables;
-//    @JsonManagedReference("eventImage")
-//    @OneToMany(mappedBy = "event__", cascade = CascadeType.REMOVE)
-//    private List<EventImage> eventImages;
+    @JsonManagedReference("imageData")
+    @OneToMany(mappedBy = "event__", cascade = CascadeType.REMOVE)
+    private List<ImageData> imageDatas;
 //    @JsonManagedReference("participantEvent")
 //    @OneToMany(mappedBy = "participantEvent", cascade = CascadeType.REMOVE)
 //    private List<Participant> participants;

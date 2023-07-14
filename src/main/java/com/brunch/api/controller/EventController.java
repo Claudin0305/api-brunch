@@ -1,10 +1,10 @@
 package com.brunch.api.controller;
 
 import com.brunch.api.entity.Event;
-import com.brunch.api.entity.EventImage;
-import com.brunch.api.repository.EventImageRepository;
-import com.brunch.api.service.classes.EventImageService;
+import com.brunch.api.entity.ImageData;
+import com.brunch.api.repository.StorageImageRepository;
 import com.brunch.api.service.classes.EventServiceImplement;
+import com.brunch.api.service.classes.StorageImageService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,9 +29,9 @@ public class EventController {
     @Autowired
     private EventServiceImplement eventServiceImplement;
     @Autowired
-    private EventImageService eventImageService;
+    private StorageImageService storageImageService;
     @Autowired
-    private EventImageRepository eventImageRepository;
+    private StorageImageRepository storageImageRepository;
 
 //    @Autowired
 //    private EventImageService eventImageService;
@@ -53,25 +53,24 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
         Event createEvent = eventServiceImplement.createEvent(event);
-        EventImage eventImage = eventImageService.saveImage(createEvent, file);
-//        String uploadImage = eventImageService.uploadImageToFileSystem(file, createEvent);
+        String imageData = storageImageService.uploadImage(file, createEvent);
         return ResponseEntity.status(HttpStatus.CREATED).body(createEvent);
     }
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Event> updateEvent(@RequestParam(name = "id_event") Long id_event, @ModelAttribute Event event, @RequestPart(value = "image", required = false) MultipartFile file, @RequestParam(value="image_change") String image_change) throws IOException {
         Event updateEvent = eventServiceImplement.updateEvent(id_event, event);
-        List<EventImage> eventImages = new ArrayList<>();
-        for(EventImage img: eventImageService.findAll()){
+        List<ImageData> imageDataList = new ArrayList<>();
+        for(ImageData img: storageImageService.findAll()){
             if(img.getEvent__().getId_event() == id_event){
-                eventImages.add(img);
+                imageDataList.add(img);
             }
         }
         if(image_change.equals('1')){
-            for(EventImage eventImage : eventImages){
-                if(eventImage.isActive()){
-                    eventImage.setActive(false);
-                    eventImageRepository.save(eventImage);
+            for(ImageData imageData : imageDataList){
+                if(imageData.isActive()){
+                    imageData.setActive(false);
+                    storageImageRepository.save(imageData);
                 }
             }
 //            String uploadImage = eventImageService.saveImage(updateEvent, file);
