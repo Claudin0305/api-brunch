@@ -15,7 +15,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -30,7 +33,9 @@ public class EventImageService {
                 .toAbsolutePath().normalize();
 
         try {
-            Files.createDirectories(this.fileStorageLocation);
+            String permissions = "rwxr-x---";
+            Set<PosixFilePermission> posixPermissions = PosixFilePermissions.fromString(permissions);
+            Files.createDirectories(this.fileStorageLocation, PosixFilePermissions.asFileAttribute(posixPermissions));
         } catch (Exception ex) {
             throw new RuntimeException(
                     "Could not create the directory where the uploaded files will be stored.", ex);
