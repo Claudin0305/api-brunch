@@ -43,4 +43,8 @@ public class StorageImageService {
     public List<ImageData> findAll(){
         return storageImageRepository.findAll();
     }
+
+    public ImageData download(String name){
+        return storageImageRepository.findByName(name).orElse(null);
+    }
 }

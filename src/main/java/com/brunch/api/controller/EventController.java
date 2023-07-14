@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -128,6 +125,12 @@ public class EventController {
 //                .contentType(MediaType.parseMediaType(contentType))
 //                .body(imageResource);
 //    }
+    @GetMapping("/images/{name}")
+    public ResponseEntity<?> downloadImage(@PathVariable String name){
+        byte[] imageData = storageImageService.downloadImage(name);
+        ImageData img = storageImageService.download(name);
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf(img.getType())).body(imageData);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException exception) {
