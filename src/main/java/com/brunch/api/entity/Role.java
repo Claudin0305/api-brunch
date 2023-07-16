@@ -1,28 +1,37 @@
 package com.brunch.api.entity;
 
+import com.brunch.api.utils.ERole;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Table(name = "roles")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class Role implements GrantedAuthority {
+public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "role_id")
-    private Integer roleId;
-    private String authority;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole name;
 
-    public Role(String authority){
-        this.authority = authority;
+    public Role(){}
+
+    public Role(ERole name){
+        this.name = name;
     }
-    @Override
-    public String getAuthority() {
-        return authority;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ERole getName() {
+        return name;
+    }
+
+    public void setName(ERole name) {
+        this.name = name;
     }
 }
