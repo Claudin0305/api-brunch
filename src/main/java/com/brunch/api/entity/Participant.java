@@ -61,8 +61,23 @@ public class Participant extends BaseEntity {
     private boolean abonnement_newsletter;
 
 //    @NotNull(message = "Ce champ est obligatoire")
-    @Column(name = "affiliation")
-    private String affiliation;
+//    @Column(name = "affiliation")
+//    private String affiliation;
+
+    public void setAffiliation(Affiliation affiliation) {
+        this.affiliation = affiliation;
+    }
+
+    public Affiliation getAffiliation() {
+        return affiliation;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+//    @NotNull
+    @JoinColumn(name = "id_affiliation", nullable = true)
+    @OnDelete(action = OnDeleteAction.RESTRICT)
+    @JsonBackReference("affiliation")
+    private Affiliation affiliation;
 
     public String getInscrit_par() {
         return inscrit_par;
@@ -90,7 +105,7 @@ public class Participant extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
 //    @NotNull
     @JoinColumn(name = "id_local", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JsonBackReference("local_participant")
     private Local local_participant;
     public FormatEvent getMode_participation() {
@@ -243,13 +258,6 @@ public class Participant extends BaseEntity {
         this.abonnement_newsletter = abonnementNewletter;
     }
 
-    public String getAffiliation() {
-        return affiliation;
-    }
-
-    public void setAffiliation(String affiliation) {
-        this.affiliation = affiliation;
-    }
 
     public Civilite getCivilite_participant() {
         return civilite_participant;
@@ -281,6 +289,19 @@ public class Participant extends BaseEntity {
 
     public String getNomPays(){
         return this.ville_participant.getDepartement().getPays().getLibelle();
+    }
+    public String getNomAffiliation(){
+        if(affiliation != null){
+            return affiliation.getNom_affiliation();
+        }
+        return null;
+    }
+
+    public Long getIdAffiliation(){
+        if(affiliation != null){
+            return affiliation.getAffiliationId();
+        }
+        return null;
     }
 
 }

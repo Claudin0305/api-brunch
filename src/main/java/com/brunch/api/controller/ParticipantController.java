@@ -33,6 +33,8 @@ public class ParticipantController {
     @Autowired
     private EventServiceImplement eventServiceImplement;
     @Autowired
+    private AffiliationServiceImpl affiliationService;
+    @Autowired
     private EmailService emailService;
     @Autowired
     private MessageServiceImplement messageServiceImplement;
@@ -45,7 +47,7 @@ public class ParticipantController {
         return participantServiceImplement.getParticipantById(id_participant);
     }
     @PostMapping
-    public ResponseEntity<Participant> createParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local) throws MessagingException {
+    public ResponseEntity<Participant> createParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation) throws MessagingException {
         String username = generateUsername(participant.getNom(), participant.getPrenom());
         while (participantServiceImplement.existsByUsername(username)){
             username = generateUsername(participant.getNom(), participant.getPrenom());
@@ -57,6 +59,9 @@ public class ParticipantController {
         if(!id_local.equals("0")){
             Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
             participant.setLocal_participant(local);
+        } if(!id_affiliation.equals("0")){
+           Affiliation affiliation = affiliationService.getAffiliationById(Long.parseLong(id_affiliation));
+           participant.setAffiliation(affiliation);
         }
 
         Event event = eventServiceImplement.getEventById(id_event);
@@ -67,6 +72,11 @@ public class ParticipantController {
         Participant createParticipant = participantServiceImplement.createParticipant(participant);
         Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
         emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), createParticipant, message.getLibelleTexte());
+        if(!id_local.equals("0")){
+            Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
+            local.setNb_reservation(local.getNb_reservation() + 1);
+            localServiceImplement.updateLocal(Long.parseLong(id_local), local);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(createParticipant);
 
     }
