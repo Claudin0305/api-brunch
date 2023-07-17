@@ -28,7 +28,7 @@ public class ImageData extends BaseEntity {
 
     private boolean isActive;
     @Lob
-    @Column(name = "imagedata", length = 1000)
+    @Column(name = "imagedata", length = 100000)
     private byte[] imageData;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

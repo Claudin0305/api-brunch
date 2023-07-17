@@ -25,6 +25,11 @@ public class EmailService {
         content = content.replace("${nom}", participant.getNom());
         content = content.replace("${prenom}", participant.getPrenom());
         content = content.replace("${username}", participant.getUsername());
+        content = content.replace("${email}", participant.getEmail());
+        content = content.replace("${pays}", participant.getNomPays());
+//        str.substring(0, 1).toUpperCase() + str.substring(1)
+        String mode = participant.getMode_participation().toString();
+        content = content.replace("${mode_participation}", mode.substring(0,1).toUpperCase() + mode.substring(1).toLowerCase());
         content = content.replace("${civilite}", participant.getCivilite_participant().getLibelle());
 
         message.setContent(content, "text/html; charset=utf-8");

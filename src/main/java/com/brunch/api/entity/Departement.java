@@ -34,9 +34,14 @@ public class Departement extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference("paysDepartement")
     private Pays pays;
+
+    public List<Ville> getVilles() {
+        return villes;
+    }
+
     @JsonManagedReference("departementVille")
     @OneToMany(mappedBy = "departement", cascade = CascadeType.REMOVE)
-//    private List<Ville> villes;
+    private List<Ville> villes;
     public Long getId_departement() {
         return id_departement;
     }

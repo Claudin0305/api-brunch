@@ -39,7 +39,7 @@ public class Event extends BaseEntity {
     @Pattern(regexp = "^(?:2[0-3]|[01][0-9]):[0-5][0-9]$", message = "Le format de l'heure est invalide")
     private String heure_fin;
     @Lob
-    @Column(name = "text_descriptif")
+    @Column(name = "text_descriptif", length = 4000)
     @NotNull(message = "Ce champ est obligatoire")
     private String text_descriptif;
     @Email(message = "Valeur invalide")
@@ -68,9 +68,9 @@ public class Event extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Ce champ est obligatoire")
     private EventType eventType;
-//    @JsonManagedReference("localEvenement")
-//    @OneToMany(mappedBy = "local_evenement", cascade = CascadeType.REMOVE)
-//    private List<Local> locals;
+    @JsonManagedReference("localEvenement")
+    @OneToMany(mappedBy = "local_evenement", cascade = CascadeType.REMOVE)
+    private List<Local> locals;
 
 //    public List<EventImage> getEventImages() {
 //        return eventImages;
