@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
 @ControllerAdvice
 @RequestMapping("/villes")
 public class VilleController {
