@@ -92,6 +92,18 @@ public ResponseEntity<List<Participant>> getByAuthorisationListeAndIdEvent(@Path
 
     }
         return ResponseEntity.ok().body(participantList);
+}@GetMapping("/all/{id_event}")
+public ResponseEntity<List<Participant>> getByIdEvent(@PathVariable Long id_event){
+        List<Participant> participants = participantServiceImplement.getAllParticipants();
+        List<Participant> participantList = new ArrayList<>();
+    for (Participant p:participants
+         ) {
+        if(p.getIdEvent() == id_event){
+            participantList.add(p);
+        }
+
+    }
+        return ResponseEntity.ok().body(participantList);
 }
     @PutMapping("/{id_civilite}/{id_ville}/{id_tranches_age}/{id_participant}")
     public ResponseEntity<Participant> updateParticipant(@Valid @RequestBody Participant participant, @PathVariable Long id_civilite, @PathVariable Long id_ville, @PathVariable(name = "id_tranches_age", required = false) Long id_tranches_age, @PathVariable Long id_participant){

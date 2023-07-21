@@ -304,4 +304,26 @@ public class Participant extends BaseEntity {
         return null;
     }
 
+    public Long getIdLocal(){
+        if(local_participant != null){
+            return local_participant.getId_local();
+        }
+        return null;
+    }
+
+    public String getDevise(){
+        if(local_participant != null){
+            return local_participant.getCodeDevise();
+        }
+        return null;
+    }
+
+    public Double getMontant_participation(){
+        if(local_participant != null){
+            return local_participant.getMontant_participation();
+        }
+
+        return null;
+    }
+
 }

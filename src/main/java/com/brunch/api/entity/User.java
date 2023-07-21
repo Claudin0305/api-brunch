@@ -24,6 +24,7 @@ public class User extends BaseEntity {
     @Size(max = 20)
     private String username;
 
+
     @NotBlank
     @Size(max = 50)
     @Email
@@ -33,6 +34,18 @@ public class User extends BaseEntity {
     @Size(max = 120)
     private String password;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @NotBlank(message = "Vous devez remplir ce champs")
+    @Size(max = 50)
+    private String name;
+
     @ManyToAny(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -41,14 +54,16 @@ public class User extends BaseEntity {
     public User() {
     }
 
-    public User(Long id, String username, String email, String password, Set<Role> roles) {
+    public User(Long id, String name, String username, String email, String password, Set<Role> roles) {
         this.id = id;
+        this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
     }
-    public User(String username, String email, String password) {
+    public User(String name, String username, String email, String password) {
+        this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
