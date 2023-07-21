@@ -11,6 +11,7 @@ import com.brunch.api.repository.RoleRepository;
 import com.brunch.api.repository.UserRepository;
 import com.brunch.api.security.jwt.JwtUtils;
 import com.brunch.api.security.services.UserDetailsImpl;
+import com.brunch.api.security.services.UserDetailsServiceImpl;
 import com.brunch.api.utils.ERole;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,8 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     PasswordEncoder encoder;
@@ -72,6 +75,15 @@ public class AuthController {
                         roles));
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok().body(userDetailsService.getAllUsers());
+    }
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> getOnUser(@PathVariable Long id){
+        return ResponseEntity.ok().body(userRepository.findById(id));
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -83,11 +95,13 @@ public class AuthController {
         }
 
         // Create new user's account
+        System.out.println(signUpRequest.getRole().toString());
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
         Set<String> strRoles = signUpRequest.getRole();
+        System.out.println(strRoles);
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
