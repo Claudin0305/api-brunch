@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "grahn-brunch.ddns.net", allowedHeaders = "*")
 @ControllerAdvice
 @RequestMapping("/villes")
 public class VilleController {
