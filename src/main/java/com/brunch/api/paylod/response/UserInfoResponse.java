@@ -1,4 +1,4 @@
-package com.brunch.api.payload.response;
+package com.brunch.api.paylod.response;
 
 import java.util.List;
 
@@ -6,13 +6,17 @@ public class UserInfoResponse {
     private Long id;
     private String username;
     private String email;
-    private List<String> roles;
     private String name;
+    private List<String> roles;
+
+    public String getToken() {
+        return token;
+    }
+
     private String token;
 
-    public UserInfoResponse(Long id, String name, String username, String email, List<String> roles) {
+    public UserInfoResponse(Long id, String username, String email, List<String> roles) {
         this.id = id;
-        this.name = name;
         this.username = username;
         this.email = email;
         this.roles = roles;
@@ -20,11 +24,11 @@ public class UserInfoResponse {
 
     public UserInfoResponse(Long id, String name, String username, String email, List<String> roles, String token) {
         this.id = id;
-        this.name = name;
         this.username = username;
         this.email = email;
         this.roles = roles;
         this.token = token;
+        this.name = name;
     }
 
     public void setRoles(List<String> roles) {

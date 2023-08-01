@@ -1,6 +1,6 @@
 package com.brunch.api.repository;
 
-import com.brunch.api.entity.Civilite;
+import com.brunch.api.entity.Participant;
 import com.brunch.api.entity.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;

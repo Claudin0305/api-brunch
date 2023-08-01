@@ -15,7 +15,6 @@ import org.springframework.web.util.WebUtils;
 
 import java.security.Key;
 import java.util.Date;
-
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);

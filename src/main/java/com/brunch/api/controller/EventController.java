@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ import java.util.*;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @ControllerAdvice
-@RequestMapping("/events")
+@RequestMapping("/api/events")
 public class EventController {
     @Autowired
     private EventServiceImplement eventServiceImplement;
@@ -44,6 +45,7 @@ public class EventController {
         return eventServiceImplement.getEventById(id_event);
     }
     @PostMapping
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Event> createEvent(@Valid @ModelAttribute Event event, @RequestPart(value = "image") MultipartFile file) throws IOException {
 
         if (file.isEmpty()) {
@@ -54,8 +56,9 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createEvent);
     }
 
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Event> updateEvent(@RequestParam(name = "id_event") Long id_event, @ModelAttribute Event event, @RequestPart(value = "image", required = false) MultipartFile file, @RequestParam(value="image_change") String image_change) throws IOException {
+    @PutMapping("/{id_event}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<Event> updateEvent(@PathVariable(name = "id_event") Long id_event, @ModelAttribute Event event, @RequestPart(value = "image", required = false) MultipartFile file, @RequestParam(value="image_change") String image_change) throws IOException {
         Event updateEvent = eventServiceImplement.updateEvent(id_event, event);
         List<ImageData> imageDataList = new ArrayList<>();
         for(ImageData img: storageImageService.findAll()){
@@ -76,6 +79,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{id_event}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteEvent(@PathVariable Long id_event){
         eventServiceImplement.deleteEvent(id_event);
         return  ResponseEntity.ok().build();

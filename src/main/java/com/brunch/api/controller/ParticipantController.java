@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ import java.util.*;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @ControllerAdvice
-@RequestMapping("/participants")
+@RequestMapping("/api/participants")
 public class ParticipantController {
     @Autowired
     private ParticipantServiceImplement participantServiceImplement;
@@ -46,6 +47,11 @@ public class ParticipantController {
     public Participant getParticipantById(@PathVariable Long id_participant){
         return participantServiceImplement.getParticipantById(id_participant);
     }
+
+    @GetMapping("/by/{username}")
+    public Participant getParticipantByUsername(@PathVariable String username){
+        return participantServiceImplement.findByUsername(username).orElse(null);
+    }
     @PostMapping
     public ResponseEntity<Participant> createParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation) throws MessagingException {
         String username = generateUsername(participant.getNom(), participant.getPrenom());
@@ -71,7 +77,7 @@ public class ParticipantController {
         participant.setTranche_age(trancheAge);
         Participant createParticipant = participantServiceImplement.createParticipant(participant);
         Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
-        emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), createParticipant, message.getLibelleTexte());
+        emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), createParticipant, message.getLibelleTexte(), event);
         if(!id_local.equals("0")){
             Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
             local.setNb_reservation(local.getNb_reservation() + 1);
@@ -105,19 +111,41 @@ public ResponseEntity<List<Participant>> getByIdEvent(@PathVariable Long id_even
     }
         return ResponseEntity.ok().body(participantList);
 }
-    @PutMapping("/{id_civilite}/{id_ville}/{id_tranches_age}/{id_participant}")
-    public ResponseEntity<Participant> updateParticipant(@Valid @RequestBody Participant participant, @PathVariable Long id_civilite, @PathVariable Long id_ville, @PathVariable(name = "id_tranches_age", required = false) Long id_tranches_age, @PathVariable Long id_participant){
+    @PutMapping("/{username}")
+    public ResponseEntity<?> updateParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation, @PathVariable String username){
         Ville ville = villeServiceImplement.getVilleById(id_ville);
-        TrancheAge trancheAge = tranchesAgeServiceImplement.getTrancheAgeById(id_tranches_age);
-        Civilite civilite = civiliteServiceImplement.getCiviliteById(id_civilite);
-        participant.setCivilite_participant(civilite);
-        participant.setVille(ville);
-//        participant.setTrancheAge(trancheAge);
-        Participant updatedParticipant = participantServiceImplement.updateParticipant(id_participant, participant);
-        return  ResponseEntity.ok(updatedParticipant);
+        Participant p = participantServiceImplement.findByUsername(username).orElse(null);
+        if(p != null){
+            Participant participantToUpdate = participantServiceImplement.getParticipantById(p.getId_participant());
+            Local localBefore = localServiceImplement.getLocalById(participantToUpdate.getIdLocal());
+            TrancheAge trancheAge = tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age);
+            Civilite civilite = civiliteServiceImplement.getCiviliteById(id_civilite);
+            participant.setCivilite_participant(civilite);
+            participant.setVille(ville);
+            participant.setTranche_age(trancheAge);
+            if(!id_local.equals("0")){
+                Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
+                participant.setLocal_participant(local);
+            } if(!id_affiliation.equals("0")){
+                Affiliation affiliation = affiliationService.getAffiliationById(Long.parseLong(id_affiliation));
+                participant.setAffiliation(affiliation);
+            }
+            Participant updatedParticipant = participantServiceImplement.updateParticipant(p.getId_participant(), participant);
+            if(!id_local.equals("0")){
+                Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
+                local.setNb_reservation(local.getNb_reservation() + 1);
+                localServiceImplement.updateLocal(Long.parseLong(id_local), local);
+            }
+            localBefore.setNb_reservation(localBefore.getNb_reservation() - 1);
+            localServiceImplement.updateLocal(localBefore.getId_local(), localBefore);
+            return  ResponseEntity.ok(updatedParticipant);
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error!");
     }
 
     @DeleteMapping("/{id_participant}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteResponsableTable(@PathVariable Long id_participant){
         participantServiceImplement.deleteParticipant(id_participant);
         return  ResponseEntity.ok().build();

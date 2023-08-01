@@ -1,4 +1,4 @@
-package com.brunch.api.payload.response;
+package com.brunch.api.paylod.response;
 
 public class MessageResponse {
     private String message;

@@ -1,5 +1,6 @@
 package com.brunch.api.service.classes;
 
+import com.brunch.api.entity.Event;
 import com.brunch.api.entity.Participant;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -15,10 +16,11 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmailFromTemplate(String to, String from, String subject, Participant participant, String content) throws MessagingException {
+    public void sendEmailFromTemplate(String to, String from, String subject, Participant participant, String content, Event event) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         message.setFrom(new InternetAddress(from));
         message.setRecipients(Message.RecipientType.TO, to);
+        message.setRecipients(Message.RecipientType.CC, event.getAdr_email_event());
         message.setSubject(subject);
 
         // Do something here to remplace variable data

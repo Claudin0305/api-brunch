@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
 @ControllerAdvice
-@RequestMapping("/villes")
+@RequestMapping("/api/villes")
 public class VilleController {
     @Autowired
     private VilleServiceImplement villeServiceImplement;
@@ -37,7 +38,17 @@ public class VilleController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Ville> createVille(@Valid @ModelAttribute Ville ville, @RequestParam("id_departement") Long id_departement){
+
+        Departement departement = departementServiceImplement.getDepartementById(id_departement);
+        ville.setDepartement(departement);
+        Ville createVille = villeServiceImplement.createVille(ville);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createVille);
+
+    }
+    @PostMapping("/from-client")
+    public ResponseEntity<Ville> createVilleFromUser(@Valid @ModelAttribute Ville ville, @RequestParam("id_departement") Long id_departement){
 
         Departement departement = departementServiceImplement.getDepartementById(id_departement);
         ville.setDepartement(departement);
@@ -49,6 +60,7 @@ public class VilleController {
 
 
     @PutMapping("/{id_ville}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Ville> updateVille(@RequestParam("id_departement") Long id_departement, @PathVariable Long id_ville, @Valid @ModelAttribute Ville ville){
         Departement departement = departementServiceImplement.getDepartementById(id_departement);
         ville.setDepartement(departement);
@@ -57,6 +69,7 @@ public class VilleController {
     }
 
     @DeleteMapping("/{id_ville}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteVille(@PathVariable Long id_ville){
         villeServiceImplement.deleteVille(id_ville);
         return  ResponseEntity.ok().build();

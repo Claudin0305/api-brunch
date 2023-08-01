@@ -1,6 +1,6 @@
 package com.brunch.api.security.services;
 
-import com.brunch.api.entity.Civilite;
+import com.brunch.api.entity.Local;
 import com.brunch.api.entity.User;
 import com.brunch.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public List<User> getAllUsers() {
         Sort sort = Sort.by("createdAt").descending();
-
         return userRepository.findAll(sort);
     }
 }

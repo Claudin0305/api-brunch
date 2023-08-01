@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ParticipantServiceImplement implements ParticipantService {
     @Autowired
@@ -51,6 +53,10 @@ public boolean existsByUsername(String username){
         participant.setInscrit_par(participantUpdate.getInscrit_par());
         participant.setModePaiement(participantUpdate.getModePaiement());
         return participantRepository.save(participant);
+    }
+
+    public Optional<Participant> findByUsername(String  username){
+        return participantRepository.findByUsername(username);
     }
 
     @Override

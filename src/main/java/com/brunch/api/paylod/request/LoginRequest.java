@@ -1,4 +1,4 @@
-package com.brunch.api.payload.request;
+package com.brunch.api.paylod.request;
 
 import jakarta.validation.constraints.NotBlank;
 

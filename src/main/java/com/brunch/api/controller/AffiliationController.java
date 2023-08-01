@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @ControllerAdvice
-@RequestMapping("/affiliations")
+@RequestMapping("/api/affiliations")
 public class AffiliationController {
     @Autowired
     private AffiliationServiceImpl affiliationService;
@@ -31,10 +32,12 @@ public class AffiliationController {
         return affiliationService.getAllAffiliations();
     }
     @GetMapping("/{affiliationId}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public Affiliation getAffiliationById(@PathVariable Long affiliationId){
         return affiliationService.getAffiliationById(affiliationId);
     }
     @PostMapping
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Affiliation> createAffiliation(@Valid @RequestBody Affiliation affiliation){
 
 
@@ -42,13 +45,23 @@ public class AffiliationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createAffiliation);
     }
 
+    @PostMapping("/from-client")
+    public ResponseEntity<Affiliation> createAffiliationFromClient(@Valid @RequestBody Affiliation affiliation){
+
+
+        Affiliation createAffiliation = affiliationService.createAffiliation(affiliation);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createAffiliation);
+    }
+
     @PutMapping("/{affiliationId}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Affiliation> updateAffiliation(@PathVariable Long affiliationId, @RequestBody Affiliation affiliation){
         Affiliation updateAffiliation = affiliationService.updateAffiliation(affiliationId, affiliation);
         return  ResponseEntity.ok(updateAffiliation);
     }
 
     @DeleteMapping("/{affiliationId}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteAffiliation(@PathVariable Long affiliationId){
         affiliationService.deleteAffiliation(affiliationId);
         return  ResponseEntity.ok().build();

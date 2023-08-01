@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @ControllerAdvice
-@RequestMapping("/devises")
+@RequestMapping("/api/devises")
 public class DeviseController {
     @Autowired
     private DeviseServiceImplement deviseServiceImplement;
@@ -28,10 +29,12 @@ public class DeviseController {
         return deviseServiceImplement.getAllDevises();
     }
     @GetMapping("/{id_devise}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public Devise getDeviseById(@PathVariable Long id_devise){
         return deviseServiceImplement.getDeviseById(id_devise);
     }
     @PostMapping
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Devise> createDevise(@Valid @RequestBody Devise devise){
 
 
@@ -40,12 +43,14 @@ public class DeviseController {
     }
 
     @PutMapping("/{id_devise}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Devise> updateDevise(@PathVariable Long id_devise, @RequestBody Devise devise){
         Devise updateDevise = deviseServiceImplement.updateDevise(id_devise, devise);
         return  ResponseEntity.ok(updateDevise);
     }
 
     @DeleteMapping("/{id_devise}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteDevise(@PathVariable Long id_devise){
         deviseServiceImplement.deleteDevise(id_devise);
         return  ResponseEntity.ok().build();

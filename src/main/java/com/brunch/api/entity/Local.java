@@ -39,6 +39,18 @@ public class Local extends BaseEntity {
     @Column(name = "adresse_no_rue")
     private String adresse_no_rue;
 
+    public String getLibelle() {
+        return libelle;
+    }
+
+    public void setLibelle(String libelle) {
+        this.libelle = libelle;
+    }
+
+    @NotNull(message = "Ce champ est obligatoire")
+    @Column(name = "libelle")
+    private String libelle;
+
     @NotNull(message = "Ce champ est obligatoire")
     @Column(name = "montant_participation")
     private Double montant_participation;

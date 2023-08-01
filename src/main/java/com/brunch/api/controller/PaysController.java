@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @ControllerAdvice
-@RequestMapping("/pays")
+@RequestMapping("/api/pays")
 public class PaysController {
     @Autowired
     private PaysServiceImplement paysService;
@@ -32,6 +33,7 @@ public class PaysController {
         return paysService.getPaysById(id_pays);
     }
     @PostMapping
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Pays> createPays(@Valid @RequestBody Pays pays){
 
 
@@ -40,12 +42,14 @@ public class PaysController {
     }
 
     @PutMapping(value = "/{id_pays}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Pays> updatePays(@PathVariable Long id_pays, @RequestBody Pays pays){
         Pays updatePays = paysService.updatePays(id_pays, pays);
         return  ResponseEntity.ok(updatePays);
     }
 
     @DeleteMapping("/{id_pays}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deletePays(@PathVariable Long id_pays){
         paysService.deletePays(id_pays);
         return  ResponseEntity.ok().build();

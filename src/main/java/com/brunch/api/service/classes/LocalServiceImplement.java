@@ -40,9 +40,10 @@ public class LocalServiceImplement implements LocalService {
         local.setCapacite_table(localUpdate.getCapacite_table());
         local.setCapacite_totale(localUpdate.getCapacite_totale());
         local.setSeuil_alerte(localUpdate.getSeuil_alerte());
-        local.setEmail_responsable(local.getEmail_responsable());
+        local.setEmail_responsable(localUpdate.getEmail_responsable());
         local.setAdresse_no_rue(localUpdate.getAdresse_no_rue());
         local.setNb_reservation(localUpdate.getNb_reservation());
+        local.setLibelle(localUpdate.getLibelle());
         local.setMontant_participation(localUpdate.getMontant_participation());
 
         return localRepository.save(local);

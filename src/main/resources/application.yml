@@ -1,10 +1,10 @@
 spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/brunch_db
-    username: brunch_db
-#    username: root
-#    password:
-    password: 0dj7CCMNZ7nnuA9c
+#    username: brunch_db
+    username: root
+    password:
+#    password: 0dj7CCMNZ7nnuA9c
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -26,5 +26,21 @@ spring:
           auth: true
           starttls:
             enable: true
+#  mail:
+#    host: webalaminute.grafiklif.com
+#    port: 465
+#    username: info.brunch@isteah.ht
+#    password: lSnsLpIhw?^
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls: true
+#          socketFactory:
+#            class: javax.net.ssl.SSLSocketFactory
+#            fallBack: false
+#    default-encoding: UTF-8
+
+
 
 

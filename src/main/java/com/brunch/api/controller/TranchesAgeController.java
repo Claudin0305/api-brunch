@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @ControllerAdvice
-@RequestMapping("/tranche-ages")
+@RequestMapping("/api/tranche-ages")
 public class TranchesAgeController {
     @Autowired
     private TranchesAgeServiceImplement tranchesAgeServiceImplement;
@@ -32,6 +33,7 @@ public class TranchesAgeController {
         return tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age);
     }
     @PostMapping
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<TrancheAge> createTranchesAge(@Valid @RequestBody TrancheAge trancheAge){
 
 
@@ -40,12 +42,14 @@ public class TranchesAgeController {
     }
 
     @PutMapping("/{id_tranche_age}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<TrancheAge> updateTranchesAge(@PathVariable Long id_tranche_age, @RequestBody TrancheAge trancheAge){
         TrancheAge updateTrancheAge = tranchesAgeServiceImplement.updateTranchesAge(id_tranche_age, trancheAge);
         return  ResponseEntity.ok(updateTrancheAge);
     }
 
     @DeleteMapping("/{id_tranche_age}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteTranchesAge(@PathVariable Long id_tranche_age){
        tranchesAgeServiceImplement.deleteTranchesAge(id_tranche_age);
         return  ResponseEntity.ok().build();

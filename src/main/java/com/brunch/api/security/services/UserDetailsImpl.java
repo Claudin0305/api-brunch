@@ -21,6 +21,10 @@ public class UserDetailsImpl implements UserDetails {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     private String name;
 
     @JsonIgnore
@@ -30,11 +34,11 @@ public class UserDetailsImpl implements UserDetails {
     public UserDetailsImpl(Long id, String name, String username, String email, String password,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
-        this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.name = name;
     }
 
     public static UserDetailsImpl build(User user) {

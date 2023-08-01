@@ -3,10 +3,10 @@ package com.brunch.api.controller;
 
 import com.brunch.api.entity.Role;
 import com.brunch.api.entity.User;
-import com.brunch.api.payload.request.LoginRequest;
-import com.brunch.api.payload.request.SignupRequest;
-import com.brunch.api.payload.response.MessageResponse;
-import com.brunch.api.payload.response.UserInfoResponse;
+import com.brunch.api.paylod.request.LoginRequest;
+import com.brunch.api.paylod.request.SignupRequest;
+import com.brunch.api.paylod.response.MessageResponse;
+import com.brunch.api.paylod.response.UserInfoResponse;
 import com.brunch.api.repository.RoleRepository;
 import com.brunch.api.repository.UserRepository;
 import com.brunch.api.security.jwt.JwtUtils;
@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -42,17 +43,29 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     PasswordEncoder encoder;
 
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
+    @GetMapping("/users")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok().body(userDetailsService.getAllUsers());
+    }
+
+    @GetMapping("/users/{id_user}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<User> getUser(@PathVariable Long id_user){
+        return ResponseEntity.ok().body(userRepository.findById(id_user).orElse(null));
+    }
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -68,20 +81,10 @@ public class AuthController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(new UserInfoResponse(userDetails.getId(),
-                        userDetails.getName(),
+                .body(new UserInfoResponse(userDetails.getId(), userDetails.getName(),
                         userDetails.getUsername(),
                         userDetails.getEmail(),
-                        roles));
-    }
-
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers(){
-        return ResponseEntity.ok().body(userDetailsService.getAllUsers());
-    }
-    @GetMapping("/users/{id}")
-    public ResponseEntity<?> getOnUser(@PathVariable Long id){
-        return ResponseEntity.ok().body(userRepository.findById(id));
+                        roles, jwtCookie.toString()));
     }
 
     @PostMapping("/signup")
@@ -95,13 +98,11 @@ public class AuthController {
         }
 
         // Create new user's account
-        System.out.println(signUpRequest.getRole().toString());
-        User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
+        User user = new User(signUpRequest.getName(),signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
         Set<String> strRoles = signUpRequest.getRole();
-        System.out.println(strRoles);
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {

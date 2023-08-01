@@ -1,4 +1,4 @@
-package com.brunch.api.payload.request;
+package com.brunch.api.paylod.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +25,7 @@ public class SignupRequest {
     }
 
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 60)
     private String name;
 
     private Set<String> role;

@@ -16,7 +16,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_participant")
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"id_event", "email"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"id_event", "email", "nom", "prenom"})})
 public class Participant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -324,6 +324,13 @@ public class Participant extends BaseEntity {
         }
 
         return null;
+    }
+    public Long getIdTrancheAge(){
+        return tranche_age.getId_tranche_age();
+    }
+
+    public Long getIdCivilite(){
+        return civilite_participant.getId_civilite();
     }
 
 }
