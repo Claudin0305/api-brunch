@@ -332,5 +332,11 @@ public class Participant extends BaseEntity {
     public Long getIdCivilite(){
         return civilite_participant.getId_civilite();
     }
+    public String getLibelleLocal(){
+        if(local_participant != null){
+            return local_participant.getLibelle();
+        }
+        return null;
+    }
 
 }

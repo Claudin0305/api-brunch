@@ -15,31 +15,34 @@ spring:
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
-  mail:
-    host: smtp.mailtrap.io
-    port: 2525
-    password: 63ad390c2522b5
-    username: 1faf2921b418aa
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
 #  mail:
-#    host: webalaminute.grafiklif.com
-#    port: 465
-#    username: info.brunch@isteah.ht
-#    password: lSnsLpIhw?^
+#    host: smtp.mailtrap.io
+#    port: 2525
+#    password: 63ad390c2522b5
+#    username: 1faf2921b418aa
 #    properties:
 #      mail:
 #        smtp:
 #          auth: true
-#          starttls: true
-#          socketFactory:
-#            class: javax.net.ssl.SSLSocketFactory
-#            fallBack: false
-#    default-encoding: UTF-8
+#          starttls:
+#            enable: true
+  mail:
+    host: mail.isteah.ht
+    port: 465
+    username: info.brunch@isteah.ht
+    password: 63ad390c2522b5
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          starttls:
+            enable: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            fallBack: false
+    default-encoding: UTF-8
 
 
 
