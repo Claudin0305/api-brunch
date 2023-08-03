@@ -44,6 +44,9 @@ public class LocalServiceImplement implements LocalService {
         local.setAdresse_no_rue(localUpdate.getAdresse_no_rue());
         local.setNb_reservation(localUpdate.getNb_reservation());
         local.setLibelle(localUpdate.getLibelle());
+        local.setLocal_devise(localUpdate.getLocal_devise());
+        local.setLocal_ville(localUpdate.getLocal_ville());
+        local.setLocal_evenement(localUpdate.getLocal_evenement());
         local.setMontant_participation(localUpdate.getMontant_participation());
 
         return localRepository.save(local);
