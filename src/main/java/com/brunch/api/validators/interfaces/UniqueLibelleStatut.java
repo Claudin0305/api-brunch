@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UniqueLibelleStatutValidator.class)
 public @interface UniqueLibelleStatut {
-    String message() default "Libelle already exists";
+    String message() default "Email already exists";
 
     Class<?>[] groups() default {};
 

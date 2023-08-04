@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface StatutRepository extends JpaRepository<Statut, Long> {
-    boolean existsByLibelle(String statut);
+    boolean existsByLibelle(String libelle);
+    Statut findByLibelle(String libelle);
     List<Statut> findAll(Sort sort);
 }

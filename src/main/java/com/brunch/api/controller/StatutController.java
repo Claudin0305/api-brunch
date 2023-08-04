@@ -43,9 +43,16 @@ public class StatutController {
 
     @PutMapping("/{id_statut}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Statut> updateDevise(@PathVariable Long id_statut, @Valid @RequestBody Statut statut){
-        Statut updateStatut = statutSeviceImplement.updateStatut(id_statut, statut);
-        return  ResponseEntity.ok(updateStatut);
+    public ResponseEntity<?> updateDevise(@PathVariable Long id_statut, @RequestBody Statut statut){
+        Statut st = statutSeviceImplement.getByLibelle(statut.getLibelle());
+        if(st.getId_statut() == id_statut){
+            System.out.println(st.getLibelle());
+            Statut updateStatut = statutSeviceImplement.updateStatut(id_statut, statut);
+            return  ResponseEntity.ok(updateStatut);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Libelle existe");
+        }
+
     }
 
     @DeleteMapping("/{id_statut}")

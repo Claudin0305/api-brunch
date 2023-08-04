@@ -38,6 +38,9 @@ public class StatutSeviceImplement implements StatutService {
         statut.setLibelle(updateStatut.getLibelle());
         return statutRepository.save(statut);
     }
+    public Statut getByLibelle(String libelle){
+        return statutRepository.findByLibelle(libelle);
+    }
 
     @Override
     public void deleteStatut(Long id_statut) {

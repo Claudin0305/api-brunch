@@ -19,4 +19,5 @@ public class UniqueLibelleStatutValidator implements ConstraintValidator<UniqueL
         }
         return libelle != null && !statutRepository.existsByLibelle(libelle);
     }
+
 }

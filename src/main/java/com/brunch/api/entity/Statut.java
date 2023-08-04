@@ -17,8 +17,9 @@ public class Statut extends BaseEntity {
     @NotNull(message = "Libelle ne peut etre null")
     @Column(nullable = false, unique = true, name = "libelle")
     @UniqueLibelleStatut(message = "Libelle existe")
-
     private String libelle;
+
+    
 
     public Long getId_statut() {
         return id_statut;
