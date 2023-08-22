@@ -4,6 +4,7 @@ package com.brunch.api.controller;
 import com.brunch.api.entity.Role;
 import com.brunch.api.entity.User;
 import com.brunch.api.paylod.request.LoginRequest;
+import com.brunch.api.paylod.request.ResetPasswordRequest;
 import com.brunch.api.paylod.request.SignupRequest;
 import com.brunch.api.paylod.response.MessageResponse;
 import com.brunch.api.paylod.response.UserInfoResponse;
@@ -15,9 +16,7 @@ import com.brunch.api.security.services.UserDetailsServiceImpl;
 import com.brunch.api.utils.ERole;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -143,5 +142,17 @@ public class AuthController {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new MessageResponse("You've been signed out!"));
+    }
+
+    @PutMapping("/reset/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?>resetPassword(@RequestBody ResetPasswordRequest password, @PathVariable Long id){
+        User user = userDetailsService.getUserById(id);
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        user.setPassword(encoder.encode(password.getPassword()));
+        userDetailsService.update(id, user);
+        return ResponseEntity.ok().body("Password update");
     }
 }

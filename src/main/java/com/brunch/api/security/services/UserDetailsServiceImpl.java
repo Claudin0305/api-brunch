@@ -1,6 +1,7 @@
 package com.brunch.api.security.services;
 
 import com.brunch.api.entity.Local;
+import com.brunch.api.entity.Pays;
 import com.brunch.api.entity.User;
 import com.brunch.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public List<User> getAllUsers() {
         Sort sort = Sort.by("createdAt").descending();
         return userRepository.findAll(sort);
+    }
+
+    public User getUserById(Long id){
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User update(Long id, User userUpdate){
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null){
+            return null;
+        }
+        user.setRoles(userUpdate.getRoles());
+        user.setEmail(userUpdate.getEmail());
+        user.setName(userUpdate.getName());
+        user.setPassword(userUpdate.getPassword());
+        return userRepository.save(user);
     }
 }
