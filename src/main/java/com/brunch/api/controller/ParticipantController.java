@@ -59,25 +59,25 @@ public class ParticipantController {
             username = generateUsername(participant.getNom(), participant.getPrenom());
         }
         participant.setUsername(username);
-        Ville ville = villeServiceImplement.getVilleById(id_ville);
-        TrancheAge trancheAge = tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age);
-        Civilite civilite = civiliteServiceImplement.getCiviliteById(id_civilite);
+//        Ville ville = villeServiceImplement.getVilleById(id_ville);
+//        TrancheAge trancheAge = tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age);
+//        Civilite civilite = civiliteServiceImplement.getCiviliteById(id_civilite);
         if(!id_local.equals("0")){
             Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
             participant.setLocal_participant(local);
         } if(!id_affiliation.equals("0")){
-           Affiliation affiliation = affiliationService.getAffiliationById(Long.parseLong(id_affiliation));
-           participant.setAffiliation(affiliation);
+//           Affiliation affiliation = affiliationService.getAffiliationById(Long.parseLong(id_affiliation));
+           participant.setAffiliation(affiliationService.getAffiliationById(Long.parseLong(id_affiliation)));
         }
 
         Event event = eventServiceImplement.getEventById(id_event);
-        participant.setEvent(event);
-        participant.setCivilite_participant(civilite);
-        participant.setVille(ville);
-        participant.setTranche_age(trancheAge);
+        participant.setEvent(eventServiceImplement.getEventById(id_event));
+        participant.setCivilite_participant(civiliteServiceImplement.getCiviliteById(id_civilite));
+        participant.setVille(villeServiceImplement.getVilleById(id_ville));
+        participant.setTranche_age(tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age));
         Participant createParticipant = participantServiceImplement.createParticipant(participant);
-        Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
-        emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), createParticipant, message.getLibelleTexte(), event);
+//        Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
+//        emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), createParticipant, message.getLibelleTexte(), event);
         if(!id_local.equals("0")){
             Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
             local.setNb_reservation(local.getNb_reservation() + 1);
@@ -110,6 +110,15 @@ public ResponseEntity<List<Participant>> getByIdEvent(@PathVariable Long id_even
 
     }
         return ResponseEntity.ok().body(participantList);
+}
+@PostMapping("/send-message")
+public ResponseEntity sendMessage(@RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_participant") Long id_participant) throws MessagingException {
+    Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
+    Event event = eventServiceImplement.getEventById(id_event);
+    Participant participant = participantServiceImplement.getParticipantById(id_participant);
+    System.out.println("Message en cours...");
+    emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), participant, message.getLibelleTexte(), event);
+        return ResponseEntity.ok().body("Email send");
 }
     @PutMapping("/{username}")
     public ResponseEntity<?> updateParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation, @PathVariable String username){

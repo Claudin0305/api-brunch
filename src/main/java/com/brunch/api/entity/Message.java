@@ -12,7 +12,7 @@ public class Message extends BaseEntity {
     private Long id;
 
     @Lob
-    @Column(name = "libelle_texte")
+    @Column(name = "libelle_texte", length = 5000)
     @NotNull(message = "Ce champ est obligatoire")
     private String libelleTexte;
 

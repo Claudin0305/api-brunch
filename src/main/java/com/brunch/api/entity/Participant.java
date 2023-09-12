@@ -24,12 +24,12 @@ public class Participant extends BaseEntity {
 
     @NotNull(message = "Ce champ est obligatoire")
     @Column(name = "nom")
-    @Pattern(regexp = "^[a-zA-ZÀ-ú\\\\-\\\\s]*", message = "Le format du nom est invalide")
+//    @Pattern(regexp = "[a-zA-ZÀÂÆÇÈÉÊËÎÏÔŒÙÛÜÝàâæçèéêëîïôœùûüý -\s]", message = "Le format du nom est invalide")
     private String nom;
 
     @NotNull(message = "Ce champ est obligatoire")
     @Column(name = "prenom")
-    @Pattern(regexp = "^[a-zA-ZÀ-ú\\\\-\\\\s ]*", message = "Le format du prénom est invalide")
+//    @Pattern(regexp  = "[a-zA-ZÀÂÆÇÈÉÊËÎÏÔŒÙÛÜÝàâæçèéêëîïôœùûüý -\s]", message = "Le format du prénom est invalide")
     private String prenom;
     @Email(message = "Email invalide")
     @Column(name = "email")
