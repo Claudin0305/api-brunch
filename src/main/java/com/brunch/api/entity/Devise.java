@@ -21,7 +21,13 @@ public class Devise extends BaseEntity {
     @UniqueDevise(message = "Devise existe")
     private String devise;
 
+    @JsonManagedReference("devisePaiement")
+    @OneToMany(mappedBy = "devise", cascade = CascadeType.REMOVE)
+    private List<PaiementRepas> paiementRepas;
 
+    @JsonManagedReference("devisePaiement")
+    @OneToMany(mappedBy = "devise", cascade = CascadeType.REMOVE)
+    private List<HistoriquePaiementRepas> historiquePaiementRepas;
 //    @JsonManagedReference("localDevise")
 //    @OneToMany(mappedBy = "local_devise", cascade = CascadeType.REMOVE)
 //    private List<Local> locals;
@@ -53,5 +59,21 @@ public class Devise extends BaseEntity {
 
     public void setCode_devise(String code_devise) {
         this.code_devise = code_devise;
+    }
+
+    public List<PaiementRepas> getPaiementRepas() {
+        return paiementRepas;
+    }
+
+    public void setPaiementRepas(List<PaiementRepas> paiementRepas) {
+        this.paiementRepas = paiementRepas;
+    }
+
+    public List<HistoriquePaiementRepas> getHistoriquePaiementRepas() {
+        return historiquePaiementRepas;
+    }
+
+    public void setHistoriquePaiementRepas(List<HistoriquePaiementRepas> historiquePaiementRepas) {
+        this.historiquePaiementRepas = historiquePaiementRepas;
     }
 }

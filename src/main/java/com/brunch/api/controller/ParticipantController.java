@@ -184,4 +184,11 @@ public ResponseEntity sendMessage(@RequestParam(value = "id_event") Long id_even
 
         return username;
     }
+//    @DeleteMapping("/{id_participant}")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    public ResponseEntity<?> deleteParticipant(@PathVariable Long id_participant){
+//        participantServiceImplement.deleteParticipant(id_participant);
+//        return  ResponseEntity.ok().build();
+//    }
+
 }

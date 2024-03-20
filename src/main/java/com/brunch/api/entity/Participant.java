@@ -6,6 +6,7 @@ import com.brunch.api.utils.FormatEvent;
 import com.brunch.api.utils.ModePaiement;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -13,6 +14,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.List;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_participant")
@@ -34,8 +37,12 @@ public class Participant extends BaseEntity {
     @Email(message = "Email invalide")
     @Column(name = "email")
     private String email;
-
-
+    @JsonManagedReference("participantPaiement")
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
+    private List<PaiementRepas> paiementRepas;
+    @JsonManagedReference("participantHistoriquePaiement")
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
+    private List<HistoriquePaiementRepas> historiquePaiementRepas;
     public String getUsername() {
         return username;
     }
@@ -283,6 +290,8 @@ public class Participant extends BaseEntity {
 //    @JsonIgnore
     private Ville ville_participant;
 
+
+
     public Long getIdEvent(){
         return participantEvent.getId_event();
     }
@@ -338,5 +347,26 @@ public class Participant extends BaseEntity {
         }
         return null;
     }
+
+    public String getNomCivilite(){
+        return civilite_participant.getLibelle();
+    }
+
+    public List<PaiementRepas> getPaiementRepas() {
+        return paiementRepas;
+    }
+
+    public void setPaiementRepas(List<PaiementRepas> paiementRepas) {
+        this.paiementRepas = paiementRepas;
+    }
+
+    public List<HistoriquePaiementRepas> getHistoriquePaiementRepas() {
+        return historiquePaiementRepas;
+    }
+
+    public void setHistoriquePaiementRepas(List<HistoriquePaiementRepas> historiquePaiementRepas) {
+        this.historiquePaiementRepas = historiquePaiementRepas;
+    }
+
 
 }
