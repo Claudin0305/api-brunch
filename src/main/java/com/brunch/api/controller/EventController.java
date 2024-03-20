@@ -37,8 +37,8 @@ public class EventController {
 //private EventImageRepository eventImageRepository;
 
     @GetMapping
-    public List<Event> getAllEvents(){
-        return eventServiceImplement.getAllEvents();
+    public ResponseEntity< List<Event>> getAllEvents(){
+        return ResponseEntity.ok().body(eventServiceImplement.getAllEvents());
     }
     @GetMapping("/{id_event}")
     public Event getEventById(@PathVariable Long id_event){
