@@ -33,7 +33,7 @@ public class StatutController {
         return statutSeviceImplement.getStatutById(id_statut);
     }
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Statut> createStatut(@Valid @RequestBody Statut statut){
 
 
@@ -42,7 +42,7 @@ public class StatutController {
     }
 
     @PutMapping("/{id_statut}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> updateDevise(@PathVariable Long id_statut, @RequestBody Statut statut){
         Statut st = statutSeviceImplement.getByLibelle(statut.getLibelle());
         if(st.getId_statut() == id_statut){
@@ -56,7 +56,7 @@ public class StatutController {
     }
 
     @DeleteMapping("/{id_statut}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteDevise(@PathVariable Long id_statut){
         statutSeviceImplement.deleteStatut(id_statut);
         return  ResponseEntity.ok().build();

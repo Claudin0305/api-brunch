@@ -34,12 +34,12 @@ public class PaiementRepasController {
         return paiementRepasService.getAllPaiementRepas();
     }
     @GetMapping("/{paiementRepasId}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public PaiementRepas getPaiementRepasById(@PathVariable Long paiementRepasId){
         return paiementRepasService.getPaiementRepasById(paiementRepasId);
     }
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<PaiementRepas> createPaiementRepas(@Valid @RequestBody PaiementRepas paiementRepas){
 
 
@@ -50,7 +50,7 @@ public class PaiementRepasController {
 
 
     @PutMapping("/{paiementRepasId}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<PaiementRepas> updatePaiementRepas(@PathVariable Long paiementRepasId, @RequestBody PaiementRepas paiementRepas){
 
         PaiementRepas updatePaiementRepas = paiementRepasService.updatePaiementRepas(paiementRepasId, paiementRepas);
@@ -58,7 +58,7 @@ public class PaiementRepasController {
     }
 
     @DeleteMapping("/{paiementRepasId}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deletePaiementRepas(@PathVariable Long paiementRepasId){
         paiementRepasService.deletePaiementRepas(paiementRepasId);
         return  ResponseEntity.ok().build();

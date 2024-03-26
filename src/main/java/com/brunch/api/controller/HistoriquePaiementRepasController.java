@@ -36,12 +36,12 @@ public class HistoriquePaiementRepasController {
         return historiquePaiementService.getAllHistoriquePaiementRepas();
     }
     @GetMapping("/{historiquePaiementRepasId}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public HistoriquePaiementRepas getHistoriquePaiementRepasById(@PathVariable Long historiquePaiementRepasId){
         return historiquePaiementService.getHistoriquePaiementRepasById(historiquePaiementRepasId);
     }
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<HistoriquePaiementRepas> createHistoriquePaiementRepas(@Valid @RequestBody HistoriquePaiementRepas historiquePaiementRepas){
 
 
@@ -52,7 +52,7 @@ public class HistoriquePaiementRepasController {
 
 
     @PutMapping("/{historiquePaiementRepasId}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<HistoriquePaiementRepas> updateHistoriquePaiementRepas(@PathVariable Long historiquePaiementRepasId, @RequestBody HistoriquePaiementRepas historiquePaiementRepas){
 
         HistoriquePaiementRepas updateHistoriquePaiementRepas = historiquePaiementService.updateHistoriquePaiementRepas(historiquePaiementRepasId, historiquePaiementRepas);
@@ -60,7 +60,7 @@ public class HistoriquePaiementRepasController {
     }
 
     @DeleteMapping("/{historiquePaiementRepasId}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteHistoriquePaiementRepas(@PathVariable Long historiquePaiementRepasId){
         historiquePaiementService.deletePaiementRepas(historiquePaiementRepasId);
         return  ResponseEntity.ok().build();

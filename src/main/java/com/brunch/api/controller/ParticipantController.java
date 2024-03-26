@@ -39,35 +39,39 @@ public class ParticipantController {
     private EmailService emailService;
     @Autowired
     private MessageServiceImplement messageServiceImplement;
+
     @GetMapping
-    public ResponseEntity<List<Participant>> getAllParticipants(){
+    public ResponseEntity<List<Participant>> getAllParticipants() {
         return ResponseEntity.ok(participantServiceImplement.getAllParticipants());
     }
+
     @GetMapping("/{id_participant}")
-    public Participant getParticipantById(@PathVariable Long id_participant){
+    public Participant getParticipantById(@PathVariable Long id_participant) {
         return participantServiceImplement.getParticipantById(id_participant);
     }
 
     @GetMapping("/by/{username}")
-    public Participant getParticipantByUsername(@PathVariable String username){
+    public Participant getParticipantByUsername(@PathVariable String username) {
         return participantServiceImplement.findByUsername(username).orElse(null);
     }
+
     @PostMapping
     public ResponseEntity<Participant> createParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation) throws MessagingException {
         String username = generateUsername(participant.getNom(), participant.getPrenom());
-        while (participantServiceImplement.existsByUsername(username)){
+        while (participantServiceImplement.existsByUsername(username)) {
             username = generateUsername(participant.getNom(), participant.getPrenom());
         }
         participant.setUsername(username);
 //        Ville ville = villeServiceImplement.getVilleById(id_ville);
 //        TrancheAge trancheAge = tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age);
 //        Civilite civilite = civiliteServiceImplement.getCiviliteById(id_civilite);
-        if(!id_local.equals("0")){
+        if (!id_local.equals("0")) {
             Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
             participant.setLocal_participant(local);
-        } if(!id_affiliation.equals("0")){
+        }
+        if (!id_affiliation.equals("0")) {
 //           Affiliation affiliation = affiliationService.getAffiliationById(Long.parseLong(id_affiliation));
-           participant.setAffiliation(affiliationService.getAffiliationById(Long.parseLong(id_affiliation)));
+            participant.setAffiliation(affiliationService.getAffiliationById(Long.parseLong(id_affiliation)));
         }
 
         Event event = eventServiceImplement.getEventById(id_event);
@@ -78,7 +82,7 @@ public class ParticipantController {
         Participant createParticipant = participantServiceImplement.createParticipant(participant);
 //        Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
 //        emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), createParticipant, message.getLibelleTexte(), event);
-        if(!id_local.equals("0")){
+        if (!id_local.equals("0")) {
             Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
             local.setNb_reservation(local.getNb_reservation() + 1);
             localServiceImplement.updateLocal(Long.parseLong(id_local), local);
@@ -86,45 +90,50 @@ public class ParticipantController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createParticipant);
 
     }
-@GetMapping("/par-evenement/{id_event}")
-public ResponseEntity<List<Participant>> getByAuthorisationListeAndIdEvent(@PathVariable Long id_event){
+
+    @GetMapping("/par-evenement/{id_event}")
+    public ResponseEntity<List<Participant>> getByAuthorisationListeAndIdEvent(@PathVariable Long id_event) {
         List<Participant> participants = participantServiceImplement.findByAuthorisationListe();
         List<Participant> participantList = new ArrayList<>();
-    for (Participant p:participants
-         ) {
-        if(p.getIdEvent() == id_event){
-            participantList.add(p);
-        }
+        for (Participant p : participants
+        ) {
+            if (p.getIdEvent() == id_event) {
+                participantList.add(p);
+            }
 
-    }
+        }
         return ResponseEntity.ok().body(participantList);
-}@GetMapping("/all/{id_event}")
-public ResponseEntity<List<Participant>> getByIdEvent(@PathVariable Long id_event){
+    }
+
+    @GetMapping("/all/{id_event}")
+    public ResponseEntity<List<Participant>> getByIdEvent(@PathVariable Long id_event) {
         List<Participant> participants = participantServiceImplement.getAllParticipants();
         List<Participant> participantList = new ArrayList<>();
-    for (Participant p:participants
-         ) {
-        if(p.getIdEvent() == id_event){
-            participantList.add(p);
-        }
+        for (Participant p : participants
+        ) {
+            if (p.getIdEvent() == id_event) {
+                participantList.add(p);
+            }
 
-    }
+        }
         return ResponseEntity.ok().body(participantList);
-}
-@PostMapping("/send-message")
-public ResponseEntity sendMessage(@RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_participant") Long id_participant) throws MessagingException {
-    Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
-    Event event = eventServiceImplement.getEventById(id_event);
-    Participant participant = participantServiceImplement.getParticipantById(id_participant);
-    System.out.println("Message en cours...");
-    emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), participant, message.getLibelleTexte(), event);
+    }
+
+    @PostMapping("/send-message")
+    public ResponseEntity sendMessage(@RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_participant") Long id_participant) throws MessagingException {
+        Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
+        Event event = eventServiceImplement.getEventById(id_event);
+        Participant participant = participantServiceImplement.getParticipantById(id_participant);
+        System.out.println("Message en cours...");
+        emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), participant, message.getLibelleTexte(), event);
         return ResponseEntity.ok().body("Email send");
-}
+    }
+
     @PutMapping("/{username}")
-    public ResponseEntity<?> updateParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation, @PathVariable String username){
+    public ResponseEntity<?> updateParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation, @PathVariable String username) {
         Ville ville = villeServiceImplement.getVilleById(id_ville);
         Participant p = participantServiceImplement.findByUsername(username).orElse(null);
-        if(p != null){
+        if (p != null) {
             Participant participantToUpdate = participantServiceImplement.getParticipantById(p.getId_participant());
             Local localBefore = localServiceImplement.getLocalById(participantToUpdate.getIdLocal());
             TrancheAge trancheAge = tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age);
@@ -132,33 +141,35 @@ public ResponseEntity sendMessage(@RequestParam(value = "id_event") Long id_even
             participant.setCivilite_participant(civilite);
             participant.setVille(ville);
             participant.setTranche_age(trancheAge);
-            if(!id_local.equals("0")){
+            if (!id_local.equals("0")) {
                 Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
                 participant.setLocal_participant(local);
-            } if(!id_affiliation.equals("0")){
+            }
+            if (!id_affiliation.equals("0")) {
                 Affiliation affiliation = affiliationService.getAffiliationById(Long.parseLong(id_affiliation));
                 participant.setAffiliation(affiliation);
             }
             Participant updatedParticipant = participantServiceImplement.updateParticipant(p.getId_participant(), participant);
-            if(!id_local.equals("0")){
+            if (!id_local.equals("0")) {
                 Local local = localServiceImplement.getLocalById(Long.parseLong(id_local));
                 local.setNb_reservation(local.getNb_reservation() + 1);
                 localServiceImplement.updateLocal(Long.parseLong(id_local), local);
             }
             localBefore.setNb_reservation(localBefore.getNb_reservation() - 1);
             localServiceImplement.updateLocal(localBefore.getId_local(), localBefore);
-            return  ResponseEntity.ok(updatedParticipant);
+            return ResponseEntity.ok(updatedParticipant);
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error!");
     }
 
     @DeleteMapping("/{id_participant}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<?> deleteResponsableTable(@PathVariable Long id_participant){
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> deleteResponsableTable(@PathVariable Long id_participant) {
         participantServiceImplement.deleteParticipant(id_participant);
-        return  ResponseEntity.ok().build();
+        return ResponseEntity.ok().build();
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException exception) {
@@ -173,14 +184,14 @@ public ResponseEntity sendMessage(@RequestParam(value = "id_event") Long id_even
 
     private static String generateUsername(String nom, String prenom) {
         // Convert the first name to lowercase and remove any spaces
-        String formattedFirstName = nom.substring(0, 2)+ "-"+ prenom.substring(0, 2);
+        String formattedFirstName = nom.substring(0, 2) + "-" + prenom.substring(0, 2);
 
         // Generate a random number
         Random random = new Random();
         int randomNumber = random.nextInt(10000); // Change the range as needed
 
         // Combine the formatted first name and random number to create the username
-        String username = formattedFirstName.toLowerCase()+"-" + randomNumber;
+        String username = formattedFirstName.toLowerCase() + "-" + randomNumber;
 
         return username;
     }

@@ -45,7 +45,7 @@ public class EventController {
         return eventServiceImplement.getEventById(id_event);
     }
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Event> createEvent(@Valid @ModelAttribute Event event, @RequestPart(value = "image") MultipartFile file) throws IOException {
 
         if (file.isEmpty()) {
@@ -57,7 +57,7 @@ public class EventController {
     }
 
     @PutMapping("/{id_event}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Event> updateEvent(@PathVariable(name = "id_event") Long id_event, @ModelAttribute Event event, @RequestPart(value = "image", required = false) MultipartFile file, @RequestParam(value="image_change") String image_change) throws IOException {
         Event updateEvent = eventServiceImplement.updateEvent(id_event, event);
         List<ImageData> imageDataList = new ArrayList<>();
@@ -79,7 +79,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{id_event}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteEvent(@PathVariable Long id_event){
         eventServiceImplement.deleteEvent(id_event);
         return  ResponseEntity.ok().build();

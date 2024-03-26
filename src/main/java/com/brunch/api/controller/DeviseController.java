@@ -29,12 +29,12 @@ public class DeviseController {
         return deviseServiceImplement.getAllDevises();
     }
     @GetMapping("/{id_devise}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public Devise getDeviseById(@PathVariable Long id_devise){
         return deviseServiceImplement.getDeviseById(id_devise);
     }
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Devise> createDevise(@Valid @RequestBody Devise devise){
 
 
@@ -43,14 +43,14 @@ public class DeviseController {
     }
 
     @PutMapping("/{id_devise}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Devise> updateDevise(@PathVariable Long id_devise, @RequestBody Devise devise){
         Devise updateDevise = deviseServiceImplement.updateDevise(id_devise, devise);
         return  ResponseEntity.ok(updateDevise);
     }
 
     @DeleteMapping("/{id_devise}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteDevise(@PathVariable Long id_devise){
         deviseServiceImplement.deleteDevise(id_devise);
         return  ResponseEntity.ok().build();

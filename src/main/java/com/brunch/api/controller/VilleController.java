@@ -38,7 +38,7 @@ public class VilleController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Ville> createVille(@Valid @ModelAttribute Ville ville, @RequestParam("id_departement") Long id_departement){
 
         Departement departement = departementServiceImplement.getDepartementById(id_departement);
@@ -60,7 +60,7 @@ public class VilleController {
 
 
     @PutMapping("/{id_ville}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Ville> updateVille(@RequestParam("id_departement") Long id_departement, @PathVariable Long id_ville, @Valid @ModelAttribute Ville ville){
         Departement departement = departementServiceImplement.getDepartementById(id_departement);
         ville.setDepartement(departement);
@@ -69,7 +69,7 @@ public class VilleController {
     }
 
     @DeleteMapping("/{id_ville}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteVille(@PathVariable Long id_ville){
         villeServiceImplement.deleteVille(id_ville);
         return  ResponseEntity.ok().build();

@@ -45,7 +45,7 @@ public class LocalController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Local> createLocalBrunch(@Valid @ModelAttribute Local local, @RequestParam(name = "id_devise") Long id_devise, @RequestParam(name = "id_event") Long id_event, @RequestParam(name = "id_ville") Long id_ville){
         Devise devise = deviseServiceImplement.getDeviseById(id_devise);
         Event event = eventServiceImplement.getEventById(id_event);
@@ -59,7 +59,7 @@ public class LocalController {
     }
 
     @PutMapping("/{id_local}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Local> updateLocalBrunch(@RequestParam(name = "id_devise") Long id_devise, @RequestParam(name = "id_event") Long id_event, @RequestParam(name = "id_ville") Long id_ville, @PathVariable Long id_local, @Valid @ModelAttribute Local local){
         Devise devise = deviseServiceImplement.getDeviseById(id_devise);
         Event event = eventServiceImplement.getEventById(id_event);
@@ -72,7 +72,7 @@ public class LocalController {
     }
 
     @DeleteMapping("/{id_local}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteLocalBrunch(@PathVariable Long id_local){
         localServiceImplement.deleteLocal(id_local);
         return  ResponseEntity.ok().build();

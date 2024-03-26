@@ -33,12 +33,12 @@ public class DepartementController {
         return departementServiceImplement.getAllDepartements();
     }
     @GetMapping("/{id_departement}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public Departement getDepartementById(@PathVariable Long id_departement){
         return departementServiceImplement.getDepartementById(id_departement);
     }
     @PostMapping()
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Departement> createDepartement(@Valid @ModelAttribute Departement departement, @RequestParam("id_pays") Long id_pays){
         Pays pays = paysServiceImplement.getPaysById(id_pays);
         departement.setPays(pays);
@@ -58,7 +58,7 @@ public class DepartementController {
     }
 
     @DeleteMapping("/{id_departement}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteDepartement(@PathVariable Long id_departement){
         departementServiceImplement.deleteDepartement(id_departement);
         return  ResponseEntity.ok().build();

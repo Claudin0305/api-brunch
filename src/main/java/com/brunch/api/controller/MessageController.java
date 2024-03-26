@@ -25,19 +25,19 @@ public class MessageController {
     private MessageServiceImplement messageServiceImplement;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<List<Message>> getAllMessages(){
         return ResponseEntity.ok(messageServiceImplement.getAllMessages());
     }
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Message> getMessage(@PathVariable Long id){
         return ResponseEntity.ok(messageServiceImplement.getMessageById(id));
     }
 
 //    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Message>create(@Valid @ModelAttribute Message message){
         System.out.println(message.getLibelleTexte());
         Message createMessage = messageServiceImplement.createMessage(message);
@@ -45,7 +45,7 @@ public class MessageController {
     }
 
     @PutMapping( value="/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Message>update(@Valid @ModelAttribute Message message, @PathVariable Long id){
         Message updateMEssage = messageServiceImplement.updateMessage(id, message);
         return  ResponseEntity.ok(updateMEssage);
@@ -64,7 +64,7 @@ public class MessageController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteMessage(@PathVariable Long id){
         messageServiceImplement.deleteMessage(id);
         return  ResponseEntity.ok().build();
