@@ -54,6 +54,7 @@ public class AuthController {
     @GetMapping("/users")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<List<User>> getAllUsers(){
+        //test
         return ResponseEntity.ok().body(userDetailsService.getAllUsers());
     }
 
