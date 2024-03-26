@@ -33,7 +33,7 @@ public class PaysController {
         return paysService.getPaysById(id_pays);
     }
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Pays> createPays(@Valid @RequestBody Pays pays){
 
 
@@ -42,14 +42,14 @@ public class PaysController {
     }
 
     @PutMapping(value = "/{id_pays}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Pays> updatePays(@PathVariable Long id_pays, @RequestBody Pays pays){
         Pays updatePays = paysService.updatePays(id_pays, pays);
         return  ResponseEntity.ok(updatePays);
     }
 
     @DeleteMapping("/{id_pays}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deletePays(@PathVariable Long id_pays){
         paysService.deletePays(id_pays);
         return  ResponseEntity.ok().build();
