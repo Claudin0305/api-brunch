@@ -56,7 +56,7 @@ public class ParticipantController {
     }
 
     @PostMapping
-    public ResponseEntity<Participant> createParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation) throws MessagingException {
+    public ResponseEntity<Participant> createParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation) throws MessagingException {
         String username = generateUsername(participant.getNom(), participant.getPrenom());
         while (participantServiceImplement.existsByUsername(username)) {
             username = generateUsername(participant.getNom(), participant.getPrenom());
@@ -78,7 +78,7 @@ public class ParticipantController {
         participant.setEvent(eventServiceImplement.getEventById(id_event));
         participant.setCivilite_participant(civiliteServiceImplement.getCiviliteById(id_civilite));
         participant.setVille(villeServiceImplement.getVilleById(id_ville));
-        participant.setTranche_age(tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age));
+//        participant.setTranche_age(tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age));
         Participant createParticipant = participantServiceImplement.createParticipant(participant);
 //        Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
 //        emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), createParticipant, message.getLibelleTexte(), event);

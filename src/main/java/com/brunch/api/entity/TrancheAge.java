@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 import java.util.List;
 
@@ -21,26 +22,28 @@ public class TrancheAge extends BaseEntity {
     @UniqueLibelleTranche(message = "Libelle existe")
     private String libelle;
 
-//    @JsonManagedReference("participantTrancheAge")
-//    @OneToMany(mappedBy = "tranche_age", cascade = CascadeType.REMOVE)
-//    private List<Participant> participants;
+    @JsonManagedReference("participantTrancheAge")
+    @OneToMany(mappedBy = "tranche_age", cascade = CascadeType.REMOVE)
+    private List<Participant> participants;
 
 
 //    public List<Participant> getParticipants() {
 //        return participants;
 //    }
-
+//
 //    public void setParticipants(List<Participant> participants) {
 //        this.participants = participants;
 //    }
 
-    public Long getId_tranche_age() {
-        return id_tranche_age;
-    }
+//    public Long getId_tranche_age() {
+//        if(id_tranche_age != null)
+//            return id_tranche_age;
+//        return (long) 0;
+//    }
 
-    public void setId_tranche_age(Long id_tranche_age) {
-        this.id_tranche_age = id_tranche_age;
-    }
+//    public void setId_tranche_age(Long id_tranche_age) {
+//        this.id_tranche_age = id_tranche_age;
+//    }
 
     public String getLibelle() {
         return libelle;

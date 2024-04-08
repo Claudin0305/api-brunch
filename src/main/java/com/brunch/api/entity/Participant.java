@@ -334,9 +334,9 @@ public class Participant extends BaseEntity {
 
         return null;
     }
-    public Long getIdTrancheAge(){
-        return tranche_age.getId_tranche_age();
-    }
+//    public Long getIdTrancheAge(){
+//        return tranche_age.getId_tranche_age();
+//    }
 
     public Long getIdCivilite(){
         return civilite_participant.getId_civilite();
