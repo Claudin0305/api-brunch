@@ -43,6 +43,10 @@ spring:
 #            class: javax.net.ssl.SSLSocketFactory
 #            fallBack: false
 #    default-encoding: UTF-8
+#  mvc:
+#    hiddenmethod:
+#      filter:
+#        enabled: true
 
 
 

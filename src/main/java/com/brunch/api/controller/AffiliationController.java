@@ -23,7 +23,7 @@ import java.util.Map;
 @ControllerAdvice
 @RequestMapping("/api/affiliations")
 public class AffiliationController {
-    @Autowired
+   @Autowired
     private AffiliationServiceImpl affiliationService;
 
 

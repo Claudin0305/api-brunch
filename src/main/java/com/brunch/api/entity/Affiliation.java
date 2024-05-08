@@ -24,4 +24,6 @@ public class Affiliation extends BaseEntity {
     @JsonManagedReference("affiliation")
     @OneToMany(mappedBy = "affiliation")
     private List<Participant> participants;
+
+
 }

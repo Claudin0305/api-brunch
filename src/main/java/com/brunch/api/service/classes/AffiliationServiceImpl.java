@@ -14,8 +14,8 @@ public class AffiliationServiceImpl implements AffiliationService {
     private AffiliationRepository affiliationRepository;
     @Override
     public List<Affiliation> getAllAffiliations() {
-        Sort sort = Sort.by("createdAt").descending();
-        return affiliationRepository.findAll(sort);
+//        Sort sort = Sort.by("createdAt").descending();
+        return affiliationRepository.findAll(Sort.by("createdAt").descending());
     }
 
     @Override
