@@ -50,6 +50,7 @@ public class EventRegisterRequest {
 //    @NotNull(message = "Ce champ est obligatoire")
     private MultipartFile file;
     private String url;
+    private String image_change;
 
 
 }

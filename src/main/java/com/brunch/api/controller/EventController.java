@@ -114,20 +114,33 @@ public class EventController {
 
     @PutMapping("/{id_event}")
 //    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Event> updateEvent(@PathVariable(name = "id_event") Long id_event, @ModelAttribute Event event, @RequestPart(value = "image", required = false) MultipartFile file, @RequestParam(value = "image_change") String image_change) throws IOException {
+    public ResponseEntity<Event> updateEvent(@PathVariable(name = "id_event") Long id_event, @ModelAttribute EventRegisterRequest eventRegisterRequest) throws IOException {
 //        System.out.println(file);
 //        if (file.isEmpty()) {
 //            System.out.println(file);
 //            return ResponseEntity.badRequest().build();
 //        }
-        Event updateEvent = eventServiceImplement.updateEvent(id_event, event);
+        Event e = eventServiceImplement.getEventById(id_event);
+        e.setAdr_email_event(eventRegisterRequest.getAdr_email_event());
+        e.setEventType(eventRegisterRequest.getEventType());
+        e.setFormat_event(eventRegisterRequest.getFormat_event());
+        e.setDate_debut(eventRegisterRequest.getDate_debut());
+        e.setDate_fin(eventRegisterRequest.getDate_fin());
+        e.setUrl(eventRegisterRequest.getUrl());
+        e.setCible_participation(eventRegisterRequest.getCible_participation());
+        e.setText_descriptif(eventRegisterRequest.getText_descriptif());
+        e.setHeure_debut(eventRegisterRequest.getHeure_debut());
+        e.setHeure_fin(eventRegisterRequest.getHeure_fin());
+        e.setHeure_fin(eventRegisterRequest.getHeure_fin());
+        System.out.println(e.getDate_fin());
+        Event updateEvent = eventServiceImplement.updateEvent(id_event, e);
         List<ImageData> imageDataList = new ArrayList<>();
         for (ImageData img : storageImageService.findAll()) {
             if (img.getEvent__().getId_event() == id_event) {
                 imageDataList.add(img);
             }
         }
-        if (image_change.equalsIgnoreCase("1")) {
+        if (eventRegisterRequest.getImage_change().equalsIgnoreCase("1")) {
             for (ImageData imageData : imageDataList) {
                 if (imageData.isActive()) {
                     imageData.setActive(false);
@@ -249,7 +262,7 @@ public class EventController {
         System.out.println("Testttt1");
 //        System.out.println(eventRegisterRequest.getDate_debut());
 //        System.out.println(eventRegisterRequest.getFile());
-        System.out.println("Testttt2");
+        System.out.println(uploadPhotoRequest.getEvent_id());
         Event e = eventServiceImplement.getEventById(uploadPhotoRequest.getEvent_id());
         upload(uploadPhotoRequest.getFile(), e);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success upload");
