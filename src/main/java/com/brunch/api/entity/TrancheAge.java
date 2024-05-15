@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
-
+@Data
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_tranche_age")
 public class TrancheAge extends BaseEntity {
@@ -45,11 +45,5 @@ public class TrancheAge extends BaseEntity {
 //        this.id_tranche_age = id_tranche_age;
 //    }
 
-    public String getLibelle() {
-        return libelle;
-    }
 
-    public void setLibelle(String libelle) {
-        this.libelle = libelle;
-    }
 }
