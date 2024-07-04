@@ -3,7 +3,6 @@ package com.brunch.api.entity;
 
 import com.brunch.api.utils.BaseEntity;
 import com.brunch.api.utils.FormatEvent;
-import com.brunch.api.utils.ModePaiement;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -11,10 +10,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,6 +23,11 @@ public class Participant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_participant;
+    @Column(name = "date_paiement")
+    private Date datePaiement;
+
+    @Column(name = "mode_paiement")
+    private String modePiement;
 
     @NotNull(message = "Ce champ est obligatoire")
     @Column(name = "nom")
@@ -43,6 +47,7 @@ public class Participant extends BaseEntity {
     @JsonManagedReference("participantHistoriquePaiement")
     @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
     private List<HistoriquePaiementRepas> historiquePaiementRepas;
+
     public String getUsername() {
         return username;
     }
@@ -53,11 +58,20 @@ public class Participant extends BaseEntity {
 
     @Column(name = "username")
     private String username;
+    @Column(name = "email_payeur")
+    private String email_payeur;
+    @Column(name = "payeur")
+    private String payeur;
+    @Column(name = "statut_payment", columnDefinition = "bit(1) default false")
+    private boolean statut_payment;
+
+    @Column(name = "statut_inscription", columnDefinition = "bit(1) default false")
+    private boolean statut_participant;
 
 
-//    @Pattern(regexp = "\\\\+(?:[0-9]?){6,14}[0-9]$", message = "Le numero est invalide")
+    //    @Pattern(regexp = "\\\\+(?:[0-9]?){6,14}[0-9]$", message = "Le numero est invalide")
     @Column(name = "tel_participant")
-    private String tel_participant;
+    private String telParticipant;
 
 
     @Column(name = "authorisation_liste", columnDefinition = "bit(1) default false")
@@ -86,12 +100,12 @@ public class Participant extends BaseEntity {
     @JsonBackReference("affiliation")
     private Affiliation affiliation;
 
-    public String getInscrit_par() {
-        return inscrit_par;
+    public String getInscritPar() {
+        return inscritPar;
     }
 
-    public void setInscrit_par(String inscrit_par) {
-        this.inscrit_par = inscrit_par;
+    public void setInscritPar(String inscrit_par) {
+        this.inscritPar = inscrit_par;
     }
 
     public Ville getVille_participant() {
@@ -99,7 +113,7 @@ public class Participant extends BaseEntity {
     }
 
     @Column(name = "inscrit_par")
-    private String inscrit_par;
+    private String inscritPar;
 
     public Local getLocal_participant() {
         return local_participant;
@@ -115,12 +129,13 @@ public class Participant extends BaseEntity {
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JsonBackReference("local_participant")
     private Local local_participant;
-    public FormatEvent getMode_participation() {
-        return mode_participation;
+
+    public FormatEvent getModeParticipation() {
+        return modeParticipation;
     }
 
-    public void setMode_participation(FormatEvent mode_participation) {
-        this.mode_participation = mode_participation;
+    public void setModeParticipation(FormatEvent mode_participation) {
+        this.modeParticipation = mode_participation;
     }
 
 
@@ -134,19 +149,19 @@ public class Participant extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "mode_participation")
-    private FormatEvent mode_participation;
+    private FormatEvent modeParticipation;
 
-    public ModePaiement getModePaiement() {
-        return modePaiement;
-    }
+//    public ModePaiement getModePaiement() {
+//        return modePaiement;
+//    }
+//
+//    public void setModePaiement(ModePaiement modePaiement) {
+//        this.modePaiement = modePaiement;
+//    }
 
-    public void setModePaiement(ModePaiement modePaiement) {
-        this.modePaiement = modePaiement;
-    }
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "mode_paiement")
-    private ModePaiement modePaiement;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "mode_paiement")
+//    private ModePaiement modePaiement;
 //    @OneToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "id_civilite", referencedColumnName = "id_civilite")
 //    private Civilite civilite_participant;
@@ -232,12 +247,12 @@ public class Participant extends BaseEntity {
     }
 
 
-    public String getTel_participant() {
-        return tel_participant;
+    public String getTelParticipant() {
+        return telParticipant;
     }
 
-    public void setTel_participant(String telParticipant) {
-        this.tel_participant = telParticipant;
+    public void setTelParticipant(String telParticipant) {
+        this.telParticipant = telParticipant;
     }
 
 
@@ -291,44 +306,51 @@ public class Participant extends BaseEntity {
     private Ville ville_participant;
 
 
-
-    public Long getIdEvent(){
+    public Long getIdEvent() {
         return participantEvent.getId_event();
     }
 
-    public String getNomPays(){
+    public String getNomPays() {
         return this.ville_participant.getDepartement().getPays().getLibelle();
     }
-    public String getNomAffiliation(){
-        if(affiliation != null){
+
+    public String getNomAffiliation() {
+        if (affiliation != null) {
             return affiliation.getNom_affiliation();
         }
         return null;
     }
 
-    public Long getIdAffiliation(){
-        if(affiliation != null){
+    public Long getIdAffiliation() {
+        if (affiliation != null) {
             return affiliation.getAffiliationId();
         }
         return null;
     }
 
-    public Long getIdLocal(){
-        if(local_participant != null){
+    public Long getIdLocal() {
+        if (local_participant != null) {
             return local_participant.getId_local();
         }
         return null;
     }
 
-    public String getDevise(){
-        if(local_participant != null){
+    public String getDevise() {
+        if (local_participant != null) {
             return local_participant.getCodeDevise();
         }
         return null;
     }
 
-    public Double getMontant_participation(){
-        if(local_participant != null){
+    public Long getIdDevise() {
+        if (local_participant != null) {
+            return local_participant.getIdDevise();
+        }
+        return null;
+    }
+
+    public Double getMontant_participation() {
+        if (local_participant != null) {
             return local_participant.getMontant_participation();
         }
 
@@ -338,17 +360,18 @@ public class Participant extends BaseEntity {
 //        return tranche_age.getId_tranche_age();
 //    }
 
-    public Long getIdCivilite(){
+    public Long getIdCivilite() {
         return civilite_participant.getId_civilite();
     }
-    public String getLibelleLocal(){
-        if(local_participant != null){
+
+    public String getLibelleLocal() {
+        if (local_participant != null) {
             return local_participant.getLibelle();
         }
         return null;
     }
 
-    public String getNomCivilite(){
+    public String getNomCivilite() {
         return civilite_participant.getLibelle();
     }
 
@@ -368,5 +391,51 @@ public class Participant extends BaseEntity {
         this.historiquePaiementRepas = historiquePaiementRepas;
     }
 
+    public String getPayeur() {
+        return this.payeur;
+    }
 
+    public String getEmail_payeur() {
+        return this.email_payeur;
+    }
+
+    public void setEmail_payeur(String email_payeur) {
+        this.email_payeur = email_payeur;
+    }
+
+    public void setPayeur(String payeur) {
+        this.payeur = payeur;
+    }
+
+    public boolean getStatut_payment() {
+        return statut_payment;
+    }
+
+    public void setStatut_payment(boolean statut_payment) {
+        this.statut_payment = statut_payment;
+    }
+
+    public boolean getStatut_participant() {
+        return this.statut_participant;
+    }
+
+    public void setStatut_participant(boolean statut_participant) {
+        this.statut_participant = statut_participant;
+    }
+
+    public Date getDatePaiement() {
+        return datePaiement;
+    }
+
+    public void setDatePaiement(Date datePaiement) {
+        this.datePaiement = datePaiement;
+    }
+
+    public String getModePiement() {
+        return modePiement;
+    }
+
+    public void setModePiement(String modePiement) {
+        this.modePiement = modePiement;
+    }
 }

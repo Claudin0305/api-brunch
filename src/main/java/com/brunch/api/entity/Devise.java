@@ -25,8 +25,8 @@ public class Devise extends BaseEntity {
     @OneToMany(mappedBy = "devise", cascade = CascadeType.REMOVE)
     private List<PaiementRepas> paiementRepas;
 
-    @JsonManagedReference("devisePaiement")
-    @OneToMany(mappedBy = "devise", cascade = CascadeType.REMOVE)
+    @JsonManagedReference("deviseHistoriquePaiement")
+    @OneToMany(mappedBy = "deviseHistoriquePaiement", cascade = CascadeType.REMOVE)
     private List<HistoriquePaiementRepas> historiquePaiementRepas;
 //    @JsonManagedReference("localDevise")
 //    @OneToMany(mappedBy = "local_devise", cascade = CascadeType.REMOVE)

@@ -42,6 +42,8 @@ public class PaiementRepasServiceImpl implements PaiementRepasService {
         p.setMontant_paye(paiementRepas.getMontant_paye());
         p.setStatut(paiementRepas.getStatut());
         p.setReste_a_payer(p.getReste_a_payer());
+        p.setMode_paiement(paiementRepas.getMode_paiement());
+        p.setDon(paiementRepas.getDon());
         return paiementRepasRepository.save(p);
     }
 

@@ -22,7 +22,7 @@ public class HistoriquePaiementRepas extends BaseEntity {
     @JoinColumn(name = "id_devise", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference("deviseHistoriquePaiement")
-    private Devise devise;
+    private Devise deviseHistoriquePaiement;
     private Date date_paiement;
     private Double montant_paye;
 
@@ -42,12 +42,12 @@ public class HistoriquePaiementRepas extends BaseEntity {
         this.participant = participant;
     }
 
-    public Devise getDevise() {
-        return devise;
+    public Devise getDeviseHistoriquePaiement() {
+        return deviseHistoriquePaiement;
     }
 
-    public void setDevise(Devise devise) {
-        this.devise = devise;
+    public void setDeviseHistoriquePaiement(Devise devise) {
+        this.deviseHistoriquePaiement = devise;
     }
 
     public Date getDate_paiement() {

@@ -35,9 +35,10 @@ public class HistoriquePaiementServiceImpl implements HistoriquePaiementRepasSer
             return null;
         }
         h.setDate_paiement(historiquePaiementRepas.getDate_paiement());
-        h.setDevise(historiquePaiementRepas.getDevise());
+        h.setDeviseHistoriquePaiement(historiquePaiementRepas.getDeviseHistoriquePaiement());
         h.setParticipant(historiquePaiementRepas.getParticipant());
         h.setMontant_paye(historiquePaiementRepas.getMontant_paye());
+
         return historiquePaiementRepasRepository.save(h);
     }
 

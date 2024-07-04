@@ -3,13 +3,15 @@ package com.brunch.api.controller;
 
 import com.brunch.api.entity.*;
 import com.brunch.api.service.classes.*;
+import com.brunch.api.utils.FormatEvent;
 import com.brunch.api.utils.MessageType;
+import com.brunch.api.utils.MultiplePaymentRequest;
+import com.brunch.api.utils.PaymentRequest;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +41,20 @@ public class ParticipantController {
     private EmailService emailService;
     @Autowired
     private MessageServiceImplement messageServiceImplement;
+
+    private static String generateUsername(String nom, String prenom) {
+        // Convert the first name to lowercase and remove any spaces
+        String formattedFirstName = nom.substring(0, 2) + "-" + prenom.substring(0, 2);
+
+        // Generate a random number
+        Random random = new Random();
+        int randomNumber = random.nextInt(10000); // Change the range as needed
+
+        // Combine the formatted first name and random number to create the username
+        String username = formattedFirstName.toLowerCase() + "-" + randomNumber;
+
+        return username;
+    }
 
     @GetMapping
     public ResponseEntity<List<Participant>> getAllParticipants() {
@@ -95,8 +111,7 @@ public class ParticipantController {
     public ResponseEntity<List<Participant>> getByAuthorisationListeAndIdEvent(@PathVariable Long id_event) {
         List<Participant> participants = participantServiceImplement.findByAuthorisationListe();
         List<Participant> participantList = new ArrayList<>();
-        for (Participant p : participants
-        ) {
+        for (Participant p : participants) {
             if (p.getIdEvent() == id_event) {
                 participantList.add(p);
             }
@@ -109,8 +124,7 @@ public class ParticipantController {
     public ResponseEntity<List<Participant>> getByIdEvent(@PathVariable Long id_event) {
         List<Participant> participants = participantServiceImplement.getAllParticipants();
         List<Participant> participantList = new ArrayList<>();
-        for (Participant p : participants
-        ) {
+        for (Participant p : participants) {
             if (p.getIdEvent() == id_event) {
                 participantList.add(p);
             }
@@ -120,7 +134,7 @@ public class ParticipantController {
     }
 
     @PostMapping("/send-message")
-    public ResponseEntity sendMessage(@RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_participant") Long id_participant) throws MessagingException {
+    public ResponseEntity<?> sendMessage(@RequestParam(value = "id_event") Long id_event, @RequestParam(value = "id_participant") Long id_participant) throws MessagingException {
         Message message = messageServiceImplement.findByMessageType(MessageType.INSCRIPTION);
         Event event = eventServiceImplement.getEventById(id_event);
         Participant participant = participantServiceImplement.getParticipantById(id_participant);
@@ -181,20 +195,6 @@ public class ParticipantController {
         });
         return ResponseEntity.badRequest().body(errors);
     }
-
-    private static String generateUsername(String nom, String prenom) {
-        // Convert the first name to lowercase and remove any spaces
-        String formattedFirstName = nom.substring(0, 2) + "-" + prenom.substring(0, 2);
-
-        // Generate a random number
-        Random random = new Random();
-        int randomNumber = random.nextInt(10000); // Change the range as needed
-
-        // Combine the formatted first name and random number to create the username
-        String username = formattedFirstName.toLowerCase() + "-" + randomNumber;
-
-        return username;
-    }
 //    @DeleteMapping("/{id_participant}")
 //    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 //    public ResponseEntity<?> deleteParticipant(@PathVariable Long id_participant){
@@ -202,4 +202,84 @@ public class ParticipantController {
 //        return  ResponseEntity.ok().build();
 //    }
 
+    @GetMapping("/find/{info}")
+    public ResponseEntity<?> getParticipant(@PathVariable String info) {
+        Participant participant = participantServiceImplement.findByUsernameOrEmailOrPhone(info);
+        if (participant == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        Map<String, Object> errors = new HashMap<>();
+        if (!participant.getPaiementRepas().isEmpty()) {
+            errors.put("participant", "Ce participant a déjà payé!");
+            System.out.println(errors.get("participant"));
+            return ResponseEntity.badRequest().body(errors);
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.put("participant", "Ce participant a déjà payé!"));
+        }
+        List<Participant> participants = participantServiceImplement.findByInscritPar(participant.getUsername());
+        Map<String, Object> response = new HashMap<>();
+        response.put("inscrit", participants);
+        response.put("participant", participant);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/payments")
+    public ResponseEntity<?> payment(@RequestBody PaymentRequest paymentRequest) {
+        Participant participant = participantServiceImplement.getParticipantById(paymentRequest.getId());
+        if (participant == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        Map<String, Object> errors = new HashMap<>();
+        if (!participant.getPaiementRepas().isEmpty()) {
+            errors.put("participant", "Ce participant a déjà payé!");
+            System.out.println(errors.get("participant"));
+            return ResponseEntity.badRequest().body(errors);
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.put("participant", "Ce participant a déjà payé!"));
+        }
+        participant.setStatut_payment(true);
+        participant.setStatut_participant(true);
+        participant.setDatePaiement(new Date());
+        return ResponseEntity.ok(participantServiceImplement.updateParticipant(paymentRequest.getId(), participant));
+    }
+
+    @PostMapping("/payments-multiple")
+    public ResponseEntity<?> paymentMultiple(@RequestBody MultiplePaymentRequest multiplePaymentRequest) {
+        Long[] data = multiplePaymentRequest.getIds();
+        for (Long id : data) {
+            Participant participant = participantServiceImplement.getParticipantById(id);
+            if (participant != null && !participant.getStatut_payment() && !participant.getStatut_participant()) {
+                participant.setStatut_payment(true);
+                participant.setStatut_participant(true);
+                participant.setDatePaiement(new Date());
+                participantServiceImplement.updateParticipant(id, participant);
+            }
+
+        }
+        return ResponseEntity.ok().build();
+//        Participant participant = participantServiceImplement.getParticipantById(paymentRequest.getId());
+//        if (participant == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//
+//        Map<String, Object> errors = new HashMap<>();
+//        if (!participant.getPaiementRepas().isEmpty()) {
+//            errors.put("participant", "Ce participant a déjà payé!");
+//            System.out.println(errors.get("participant"));
+//            return ResponseEntity.badRequest().body(errors);
+//            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.put("participant", "Ce participant a déjà payé!"));
+//        }
+//        participant.setStatut_payment(true);
+//        participant.setStatut_participant(true);
+//        participant.setDatePaiement(new Date());
+//        return ResponseEntity.ok(participantServiceImplement.updateParticipant(paymentRequest.getId(), participant));
+    }
+
+    @GetMapping("/mode-participation")
+    public ResponseEntity<List<Participant>> findModeParticipation() {
+        return ResponseEntity.ok().body(participantServiceImplement.findByModeParticipation(FormatEvent.PRESENTIEL));
+    }
 }

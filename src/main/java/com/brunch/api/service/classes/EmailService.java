@@ -30,7 +30,7 @@ public class EmailService {
         content = content.replace("${email}", participant.getEmail());
         content = content.replace("${pays}", participant.getNomPays());
 //        str.substring(0, 1).toUpperCase() + str.substring(1)
-        String mode = participant.getMode_participation().toString();
+        String mode = participant.getModeParticipation().toString();
         content = content.replace("${mode_participation}", mode.substring(0,1).toUpperCase() + mode.substring(1).toLowerCase());
         content = content.replace("${civilite}", participant.getCivilite_participant().getLibelle());
 
