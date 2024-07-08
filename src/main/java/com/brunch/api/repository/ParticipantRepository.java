@@ -14,8 +14,8 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     List<Participant> findAll(Sort sort);
     boolean existsByUsername(String username);
     Optional<Participant> findByUsername(String username);
-    List<Participant>findByAuthorisationListe(Sort sort, boolean authorisation_liste);
+    List<Participant>findByAuthorisationListeAndStatutParticipant(Sort sort, boolean authorisation_liste, boolean statutParticipant);
     Participant findByUsernameOrEmailOrTelParticipant(String username, String email, String phone);
     List<Participant> findByInscritPar(String id);
-    List<Participant> findByModeParticipation(FormatEvent formatEvent);
+    List<Participant> findByModeParticipation(FormatEvent formatEvent, Sort sort);
 }

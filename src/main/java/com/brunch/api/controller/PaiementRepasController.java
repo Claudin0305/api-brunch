@@ -33,6 +33,8 @@ public class PaiementRepasController {
     private ParticipantServiceImplement participantServiceImplement;
     @Autowired
     private StatutSeviceImplement statutSeviceImplement;
+    @Autowired
+    private DonService donService;
 
 
     @GetMapping
@@ -154,16 +156,26 @@ public class PaiementRepasController {
         paiementRepas.setDate_dernier_paiement(new Date());
 //        paiementRepas.setStatut(null);
         participant.setDatePaiement(new Date());
-        participant.setStatut_participant(true);
+        participant.setStatutParticipant(true);
         participant.setPayeur(paiementPaypalRequest.getPayeur());
         participant.setEmail_payeur(paiementPaypalRequest.getEmail_payeur());
         participant.setModePiement("PAYPAL");
         participant.setStatut_payment(true);
+        Map<String,Object> data = new HashMap<>();
+        if (participant.getMontant_participation() < paiementPaypalRequest.getMontant_paye()) {
+            Don don = new Don();
+            don.setMontant(paiementPaypalRequest.getMontant_paye() - participant.getMontant_participation());
+            don.setParticipant(participant);
+            donService.createDon(don);
+            data.put("don", don);
+        }
 
         paiementRepas.setReste_a_payer(participant.getLocal_participant().getMontant_participation() - paiementPaypalRequest.getMontant_paye());
+        participant = participantServiceImplement.updateParticipant(idParticipant, participant);
+        data.put("participant", participant);
 //        //List<Participant> participants = participantServiceImplement.findByInscritPar(participant.getUsername());
 //        paiementRepasService.createPaiementRepas(paiementRepas);
-        return ResponseEntity.ok(participantServiceImplement.updateParticipant(idParticipant, participant));
+        return ResponseEntity.ok(data);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

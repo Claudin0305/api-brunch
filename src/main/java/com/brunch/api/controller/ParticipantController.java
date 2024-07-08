@@ -143,6 +143,20 @@ public class ParticipantController {
         return ResponseEntity.ok().body("Email send");
     }
 
+    @PostMapping("/send-message/paiement")
+    public ResponseEntity<?> sendMessagePayment(@RequestBody MultiplePaymentRequest multiplePaymentRequest) throws MessagingException {
+        Long data[] = multiplePaymentRequest.getIds();
+        for (Long id : data) {
+            Message message = messageServiceImplement.findByMessageType(MessageType.PAIEMENT);
+            Participant participant = participantServiceImplement.getParticipantById(id);
+            Event event = participant.getParticipantEvent();
+            System.out.println("Message en cours...");
+            emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), participant, message.getLibelleTexte(), event);
+
+        }
+        return ResponseEntity.ok().body("Email send");
+    }
+
     @PutMapping("/{username}")
     public ResponseEntity<?> updateParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation, @PathVariable String username) {
         Ville ville = villeServiceImplement.getVilleById(id_ville);
@@ -240,9 +254,29 @@ public class ParticipantController {
             //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.put("participant", "Ce participant a déjà payé!"));
         }
         participant.setStatut_payment(true);
-        participant.setStatut_participant(true);
+        participant.setStatutParticipant(true);
         participant.setDatePaiement(new Date());
         return ResponseEntity.ok(participantServiceImplement.updateParticipant(paymentRequest.getId(), participant));
+    }
+
+    @PostMapping("/anulation-multiple")
+    public ResponseEntity<?> anaulationRegister(@RequestBody MultiplePaymentRequest multiplePaymentRequest) {
+        Long[] data = multiplePaymentRequest.getIds();
+        for (Long id : data) {
+            Participant participant = participantServiceImplement.getParticipantById(id);
+            if (participant != null && !participant.getStatut_payment() && participant.getStatutParticipant()) {
+                Local local = participant.getLocal_participant();
+//                participant.setStatut_payment(true);
+                participant.setStatutParticipant(false);
+                local.setNb_reservation(local.getNb_reservation() - 1);
+
+                participant.setDatePaiement(new Date());
+                localServiceImplement.updateLocal(local.getId_local(), local);
+                participantServiceImplement.updateParticipant(id, participant);
+            }
+
+        }
+        return ResponseEntity.ok().body(data);
     }
 
     @PostMapping("/payments-multiple")
@@ -250,15 +284,16 @@ public class ParticipantController {
         Long[] data = multiplePaymentRequest.getIds();
         for (Long id : data) {
             Participant participant = participantServiceImplement.getParticipantById(id);
-            if (participant != null && !participant.getStatut_payment() && !participant.getStatut_participant()) {
+            if (participant != null && !participant.getStatut_payment() && !participant.getStatutParticipant()) {
                 participant.setStatut_payment(true);
-                participant.setStatut_participant(true);
+                participant.setStatutParticipant(true);
                 participant.setDatePaiement(new Date());
                 participantServiceImplement.updateParticipant(id, participant);
             }
 
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(data);
+
 //        Participant participant = participantServiceImplement.getParticipantById(paymentRequest.getId());
 //        if (participant == null) {
 //            return ResponseEntity.notFound().build();

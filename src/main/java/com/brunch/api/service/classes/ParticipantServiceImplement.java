@@ -25,7 +25,7 @@ public class ParticipantServiceImplement implements ParticipantService {
 
     public List<Participant> findByAuthorisationListe() {
         Sort sort = Sort.by("createdAt").descending();
-        return participantRepository.findByAuthorisationListe(sort, true);
+        return participantRepository.findByAuthorisationListeAndStatutParticipant(sort, true, true);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ParticipantServiceImplement implements ParticipantService {
         participant.setAuthorisationListe(participantUpdate.isAuthorisationListe());
         participant.setInscritPar(participantUpdate.getInscritPar());
         participant.setModePiement(participantUpdate.getModePiement());
-        participant.setStatut_participant(participantUpdate.getStatut_participant());
+        participant.setStatutParticipant(participantUpdate.getStatutParticipant());
         participant.setStatut_payment(participantUpdate.getStatut_payment());
         participant.setEmail_payeur(participantUpdate.getEmail_payeur());
         participant.setPayeur(participantUpdate.getPayeur());
@@ -84,6 +84,7 @@ public class ParticipantServiceImplement implements ParticipantService {
         return participantRepository.findByInscritPar(id);
     }
     public List<Participant> findByModeParticipation(FormatEvent formatEvent){
-        return participantRepository.findByModeParticipation(formatEvent);
+        Sort sort = Sort.by("createdAt").descending();
+        return participantRepository.findByModeParticipation(formatEvent, sort);
     }
 }

@@ -48,6 +48,9 @@ public class Participant extends BaseEntity {
     @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
     private List<HistoriquePaiementRepas> historiquePaiementRepas;
 
+    @JsonManagedReference("participantDon")
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
+    private List<Don> donList;
     public String getUsername() {
         return username;
     }
@@ -66,12 +69,13 @@ public class Participant extends BaseEntity {
     private boolean statut_payment;
 
     @Column(name = "statut_inscription", columnDefinition = "bit(1) default false")
-    private boolean statut_participant;
+    private boolean statutParticipant;
 
 
     //    @Pattern(regexp = "\\\\+(?:[0-9]?){6,14}[0-9]$", message = "Le numero est invalide")
     @Column(name = "tel_participant")
     private String telParticipant;
+
 
 
     @Column(name = "authorisation_liste", columnDefinition = "bit(1) default false")
@@ -415,12 +419,12 @@ public class Participant extends BaseEntity {
         this.statut_payment = statut_payment;
     }
 
-    public boolean getStatut_participant() {
-        return this.statut_participant;
+    public boolean getStatutParticipant() {
+        return this.statutParticipant;
     }
 
-    public void setStatut_participant(boolean statut_participant) {
-        this.statut_participant = statut_participant;
+    public void setStatutParticipant(boolean statut_participant) {
+        this.statutParticipant = statut_participant;
     }
 
     public Date getDatePaiement() {
@@ -437,5 +441,9 @@ public class Participant extends BaseEntity {
 
     public void setModePiement(String modePiement) {
         this.modePiement = modePiement;
+    }
+
+    public List<Don> getDonList(){
+        return donList;
     }
 }
