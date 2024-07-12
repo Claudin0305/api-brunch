@@ -1,5 +1,5 @@
 package com.brunch.api.utils;
 
 public enum MessageType {
-    INSCRIPTION, PAIEMENT
+    INSCRIPTION, PAIEMENT, DON, ANNULATION
 }

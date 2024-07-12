@@ -157,6 +157,20 @@ public class ParticipantController {
         return ResponseEntity.ok().body("Email send");
     }
 
+    @PostMapping("/send-message/annulation")
+    public ResponseEntity<?> sendMessageAnnulation(@RequestBody MultiplePaymentRequest multiplePaymentRequest) throws MessagingException {
+        Long data[] = multiplePaymentRequest.getIds();
+        for (Long id : data) {
+            Message message = messageServiceImplement.findByMessageType(MessageType.ANNULATION);
+            Participant participant = participantServiceImplement.getParticipantById(id);
+            Event event = participant.getParticipantEvent();
+            System.out.println("Message en cours...");
+            emailService.sendEmailFromTemplate(participant.getEmail(), event.getAdr_email_event(), message.getSubject(), participant, message.getLibelleTexte(), event);
+
+        }
+        return ResponseEntity.ok().body("Email send");
+    }
+
     @PutMapping("/{username}")
     public ResponseEntity<?> updateParticipant(@Valid @ModelAttribute Participant participant, @RequestParam(value = "id_civilite") Long id_civilite, @RequestParam(value = "id_ville") Long id_ville, @RequestParam(value = "id_tranche_age") Long id_tranche_age, @RequestParam(value = "id_local", required = false) String id_local, @RequestParam(value = "id_affiliation", required = false) String id_affiliation, @PathVariable String username) {
         Ville ville = villeServiceImplement.getVilleById(id_ville);
@@ -259,7 +273,7 @@ public class ParticipantController {
         return ResponseEntity.ok(participantServiceImplement.updateParticipant(paymentRequest.getId(), participant));
     }
 
-    @PostMapping("/anulation-multiple")
+    @PostMapping("/annulation-multiple")
     public ResponseEntity<?> anaulationRegister(@RequestBody MultiplePaymentRequest multiplePaymentRequest) {
         Long[] data = multiplePaymentRequest.getIds();
         for (Long id : data) {
