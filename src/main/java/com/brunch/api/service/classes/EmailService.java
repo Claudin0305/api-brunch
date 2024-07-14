@@ -2,6 +2,7 @@ package com.brunch.api.service.classes;
 
 import com.brunch.api.entity.Event;
 import com.brunch.api.entity.Participant;
+import com.brunch.api.utils.FormatEvent;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -32,8 +33,8 @@ public class EmailService {
         content = content.replace("${montant_participation}", participant.getMontant_participation().toString());
         content = content.replace("${devise}", participant.getDevise());
 //        str.substring(0, 1).toUpperCase() + str.substring(1)
-        String mode = participant.getModeParticipation().toString();
-        content = content.replace("${mode_participation}", mode.substring(0,1).toUpperCase() + mode.substring(1).toLowerCase());
+        FormatEvent mode = participant.getModeParticipation();
+        content = content.replace("${mode_participation}", mode.toString());
         content = content.replace("${civilite}", participant.getCivilite_participant().getLibelle());
 
         message.setContent(content, "text/html; charset=utf-8");
