@@ -11,8 +11,6 @@ import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Affiliation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +19,17 @@ public class Affiliation extends BaseEntity {
     @Column(name = "nom_affiliation")
     private String nom_affiliation;
 
+    @Column(name="validate", columnDefinition = "bit(1) default false")
+    private boolean validate;
+
     @JsonManagedReference("affiliation")
     @OneToMany(mappedBy = "affiliation")
     private List<Participant> participants;
 
-
+    public boolean getValidate(){
+        return validate;
+    }
+    public void setValidate(boolean validate){
+        this.validate = validate;
+    }
 }

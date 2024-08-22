@@ -46,4 +46,7 @@ public class DeviseServiceImplement implements DeviseService {
     public void deleteDevise(Long id_civilite) {
 deviseRepository.deleteById(id_civilite);
     }
+    public Devise findByDevise(String devise){
+        return deviseRepository.findByDevise(devise).orElse(null);
+    }
 }

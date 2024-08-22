@@ -30,8 +30,12 @@ public class EmailService {
         content = content.replace("${username}", participant.getUsername());
         content = content.replace("${email}", participant.getEmail());
         content = content.replace("${pays}", participant.getNomPays());
-        content = content.replace("${montant_participation}", participant.getMontant_participation().toString());
-        content = content.replace("${devise}", participant.getDevise());
+        if(participant.getMontant_participation() != null){
+            content = content.replace("${montant_participation}", participant.getMontant_participation().toString());
+        }
+       if(participant.getDevise() != null){
+           content = content.replace("${devise}", participant.getDevise());
+       }
 //        str.substring(0, 1).toUpperCase() + str.substring(1)
         FormatEvent mode = participant.getModeParticipation();
         content = content.replace("${mode_participation}", mode.toString());

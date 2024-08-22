@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface AffiliationRepository extends JpaRepository<Affiliation, Long> {
     List<Affiliation> findAll(Sort sort);
+    List<Affiliation>findAllByValidate(boolean validate, Sort sort);
 }

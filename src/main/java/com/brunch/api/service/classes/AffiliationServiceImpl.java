@@ -36,8 +36,11 @@ public class AffiliationServiceImpl implements AffiliationService {
         }
 
         affiliation.setNom_affiliation(updateAffiliation.getNom_affiliation());
-
+        affiliation.setValidate(updateAffiliation.getValidate());
         return affiliationRepository.save(affiliation);
+    }
+    public List<Affiliation> findValidate(){
+        return affiliationRepository.findAllByValidate(true,Sort.by("createdAt").descending());
     }
 
     @Override

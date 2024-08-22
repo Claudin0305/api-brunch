@@ -89,6 +89,9 @@ public class ParticipantController {
 //           Affiliation affiliation = affiliationService.getAffiliationById(Long.parseLong(id_affiliation));
             participant.setAffiliation(affiliationService.getAffiliationById(Long.parseLong(id_affiliation)));
         }
+        if(participant.getModeParticipation().equals(FormatEvent.DISTANCIEL)){
+            participant.setStatutParticipant(true);
+        }
 
         Event event = eventServiceImplement.getEventById(id_event);
         participant.setEvent(eventServiceImplement.getEventById(id_event));
@@ -330,5 +333,9 @@ public class ParticipantController {
     @GetMapping("/mode-participation")
     public ResponseEntity<List<Participant>> findModeParticipation() {
         return ResponseEntity.ok().body(participantServiceImplement.findByModeParticipation(FormatEvent.PRESENTIEL));
+    }
+    @GetMapping("/{email}/{nom}/{prenom}")
+    public ResponseEntity<?> findByEmailAndNomAndPrenom(@PathVariable String email, @PathVariable String nom, @PathVariable String prenom) {
+        return ResponseEntity.ok().body(participantServiceImplement.findByEmailAndNomAndPrenom(email, nom, prenom));
     }
 }

@@ -39,8 +39,7 @@ public class AffiliationController {
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Affiliation> createAffiliation(@Valid @RequestBody Affiliation affiliation){
-
-
+        affiliation.setValidate(true);
         Affiliation createAffiliation = affiliationService.createAffiliation(affiliation);
         return ResponseEntity.status(HttpStatus.CREATED).body(createAffiliation);
     }
@@ -65,6 +64,10 @@ public class AffiliationController {
     public ResponseEntity<?> deleteAffiliation(@PathVariable Long affiliationId){
         affiliationService.deleteAffiliation(affiliationId);
         return  ResponseEntity.ok().build();
+    }
+    @GetMapping("/validate")
+    public ResponseEntity<List<Affiliation>> findValidAffiliations(){
+        return ResponseEntity.status(HttpStatus.OK).body(affiliationService.findValidate());
     }
 
 

@@ -18,7 +18,7 @@ public class Devise extends BaseEntity {
     private Long id_devise;
     @NotNull(message = "Devise ne peut etre null")
     @Column(nullable = false, unique = true, name = "devise")
-    @UniqueDevise(message = "Devise existe")
+//    @UniqueDevise(message = "Devise existe")
     private String devise;
 
     @JsonManagedReference("devisePaiement")

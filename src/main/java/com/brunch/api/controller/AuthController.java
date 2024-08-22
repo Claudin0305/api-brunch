@@ -156,4 +156,10 @@ public class AuthController {
         userDetailsService.update(id, user);
         return ResponseEntity.ok().body("Password update");
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id){
+        userRepository.deleteById(id);
+        return  ResponseEntity.ok().build();
+    }
 }

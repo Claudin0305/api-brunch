@@ -87,4 +87,7 @@ public class ParticipantServiceImplement implements ParticipantService {
         Sort sort = Sort.by("createdAt").descending();
         return participantRepository.findByModeParticipation(formatEvent, sort);
     }
+    public Participant findByEmailAndNomAndPrenom(String email, String nom, String prenom) {
+        return participantRepository.findByEmailAndNomAndPrenom(email, nom,prenom).orElse(null);
+    }
 }

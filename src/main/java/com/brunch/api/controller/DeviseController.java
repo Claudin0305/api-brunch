@@ -35,18 +35,31 @@ public class DeviseController {
     }
     @PostMapping
 //    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Devise> createDevise(@Valid @RequestBody Devise devise){
+    public ResponseEntity<?> createDevise(@Valid @RequestBody Devise devise){
+        Map<String, String> errors = new HashMap<>();
+        Devise d = deviseServiceImplement.findByDevise(devise.getDevise());
+        if(d == null){
 
+            Devise createDevise = deviseServiceImplement.createDevise(devise);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createDevise);
 
-        Devise createDevise = deviseServiceImplement.createDevise(devise);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createDevise);
+        }
+        errors.put("devise", "Devise existe");
+        return ResponseEntity.badRequest().body(errors);
     }
 
     @PutMapping("/{id_devise}")
 //    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Devise> updateDevise(@PathVariable Long id_devise, @RequestBody Devise devise){
-        Devise updateDevise = deviseServiceImplement.updateDevise(id_devise, devise);
-        return  ResponseEntity.ok(updateDevise);
+    public ResponseEntity<?> updateDevise(@PathVariable Long id_devise, @Valid @RequestBody Devise devise){
+        Map<String, String> errors = new HashMap<>();
+        Devise d = deviseServiceImplement.findByDevise(devise.getDevise());
+        if(d != null && d.getId_devise() == id_devise || d == null){
+            Devise updateDevise = deviseServiceImplement.updateDevise(id_devise, devise);
+            return  ResponseEntity.ok(updateDevise);
+
+        }
+        errors.put("devise", "Devise existe");
+       return ResponseEntity.badRequest().body(errors);
     }
 
     @DeleteMapping("/{id_devise}")
