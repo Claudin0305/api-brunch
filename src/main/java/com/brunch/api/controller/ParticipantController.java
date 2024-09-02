@@ -78,6 +78,7 @@ public class ParticipantController {
             username = generateUsername(participant.getNom(), participant.getPrenom());
         }
         participant.setUsername(username);
+        participant.setStatutParticipant(true);
 //        Ville ville = villeServiceImplement.getVilleById(id_ville);
 //        TrancheAge trancheAge = tranchesAgeServiceImplement.getTrancheAgeById(id_tranche_age);
 //        Civilite civilite = civiliteServiceImplement.getCiviliteById(id_civilite);

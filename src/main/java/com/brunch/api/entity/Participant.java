@@ -446,4 +446,11 @@ public class Participant extends BaseEntity {
     public List<Don> getDonList(){
         return donList;
     }
+
+    public boolean getStatusAffiliation(){
+        if(affiliation != null){
+            return affiliation.getValidate();
+        }
+        return false;
+    }
 }

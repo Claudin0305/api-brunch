@@ -38,6 +38,9 @@ public class EmailService {
        }
 //        str.substring(0, 1).toUpperCase() + str.substring(1)
         FormatEvent mode = participant.getModeParticipation();
+       if(participant.getModePiement() != null){
+           content = content.replace("${mode_paiement}", participant.getModePiement().toString());
+       }
         content = content.replace("${mode_participation}", mode.toString());
         content = content.replace("${civilite}", participant.getCivilite_participant().getLibelle());
 

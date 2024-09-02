@@ -17,17 +17,34 @@ spring:
       FAIL_ON_EMPTY_BEANS: false
 
 
+#  mail:
+#    host: smtp.mailtrap.io
+#    port: 2525
+#    password: 1302e6df55c96f
+#    username: f97ce35e601962
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
   mail:
-    host: smtp.mailtrap.io
-    port: 2525
-    password: 1302e6df55c96f
-    username: f97ce35e601962
+    host: mail.isteah.ht
+    port: 465
+    username: info-brunch@isteah.ht
+    password: ",YVGdbzkKsw)"
     properties:
       mail:
         smtp:
           auth: true
+          ssl:
+            enable: true
           starttls:
             enable: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            fallBack: false
+    default-encoding: UTF-8
 #  mail:
 #    host: mail.isteah.ht
 #    port: 465
