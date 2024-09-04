@@ -32,14 +32,20 @@ public class EmailService {
         content = content.replace("${pays}", participant.getNomPays());
         if(participant.getMontant_participation() != null){
             content = content.replace("${montant_participation}", participant.getMontant_participation().toString());
+        }else{
+            content = content.replace("${montant_participation}", "");
         }
        if(participant.getDevise() != null){
            content = content.replace("${devise}", participant.getDevise());
+       }else{
+           content = content.replace("${devise}", "");
        }
 //        str.substring(0, 1).toUpperCase() + str.substring(1)
         FormatEvent mode = participant.getModeParticipation();
        if(participant.getModePiement() != null){
            content = content.replace("${mode_paiement}", participant.getModePiement().toString());
+       }else{
+           content = content.replace("${mode_paiement}", "");
        }
         content = content.replace("${mode_participation}", mode.toString());
         content = content.replace("${civilite}", participant.getCivilite_participant().getLibelle());

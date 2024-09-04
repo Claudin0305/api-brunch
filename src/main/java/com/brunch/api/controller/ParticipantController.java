@@ -147,6 +147,8 @@ public class ParticipantController {
         return ResponseEntity.ok().body("Email send");
     }
 
+
+
     @PostMapping("/send-message/paiement")
     public ResponseEntity<?> sendMessagePayment(@RequestBody MultiplePaymentRequest multiplePaymentRequest) throws MessagingException {
         Long data[] = multiplePaymentRequest.getIds();
